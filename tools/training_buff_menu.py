@@ -1,7 +1,7 @@
 """Native training reward selector, using the audited merchant dialog primitives."""
 import struct
 from full_relic_menu import integer, expression
-from numeric_reward import TOKEN_GOODS,READY_FLAG,extra_entries,redemption_events
+from numeric_reward import TOKEN_GOODS,TOKEN_EFFECT,READY_FLAG,extra_entries,redemption_events
 
 MAGIC=1599848000
 MARKERS=tuple(MAGIC+i for i in range(4))
@@ -53,7 +53,7 @@ def compile_menu(entries):
         node(n,entry=[cmd(100,1,0),cmd(100,3,0),cmd(100,2,payload),cmd(100,1,op)],conditions=[go(n+'_ack')])
         node(n+'_ack',conditions=[eq(work(3),-1,'error'),dict(eval=expression(work(3)+integer(1)+b'\x94'),target=target)],modal=True)
     if numeric:
-        have_token=integer(16)+integer(3)+integer(TOKEN_GOODS)+b'\x86'
+        have_token=integer(61)+integer(TOKEN_EFFECT)+b'\x85'
         node('entry_router',conditions=[eq(have_token,1,'numeric_begin'),go('root')])
         node('numeric_begin',entry=[cmd(11,READY_FLAG,0)],conditions=[go('numeric0')])
         choices=[e for e in entries if e.get('custom')]
@@ -95,7 +95,8 @@ def compile_menu(entries):
                 items.append((text('返回分类'),f'categories{s}'))
                 page(f'pick{s}_{ci}_{page_index}',items,f'categories{s}')
         for e in entries:request(f'select{s}_{e["index"]}',100+s,e['index'],'editor_clear')
-    request('spawn',200,0,'trigger')
+    request('spawn_request' if numeric else 'spawn',200,0,'trigger')
+    if numeric:node('spawn',conditions=[eq(have_token,1,'numeric_begin'),go('spawn_request')])
     node('trigger',entry=[cmd(11,FLAG,1)],conditions=[go('exit')])
     page('error',[(text('配置未就绪，请返回重试'),'editor_clear'),(text('离开'),'exit')],'exit')
     ids={n:STATE_BASE+i for i,n in enumerate(nodes)}

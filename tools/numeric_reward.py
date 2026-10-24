@@ -6,6 +6,8 @@ namespaces. Unknown attack/movement speed mappings are deliberately absent.
 import struct
 
 TOKEN_GOODS=8900999
+TOKEN_EFFECT=TOKEN_GOODS
+PLAYER=10000
 READY_FLAG=10009881
 SELECT_FLAG=10009900
 LOT_BASE=1900640000
@@ -30,25 +32,25 @@ def redemption_events(entries):
     ins=instruction
     events=[dict(id=READY_FLAG,instructions=[
         ins(2003,66,'<B3xIB3x',0,READY_FLAG,0),
-        ins(3,4,'<bB2xiB3x',0,3,TOKEN_GOODS,1),
+        ins(4,5,'<b3xIiBb2xf',0,PLAYER,TOKEN_EFFECT,1,0,1.0),
         ins(1001,0,'<f',1.0),
         ins(2003,66,'<B3xIB3x',0,READY_FLAG,1),
-        ins(3,4,'<bB2xiB3x',0,3,TOKEN_GOODS,0),
+        ins(4,5,'<b3xIiBb2xf',0,PLAYER,TOKEN_EFFECT,0,0,1.0),
         ins(1000,4,'<B3x',1)])]
     for i,e in enumerate(x for x in entries if x.get('custom')):
         # All choices share one serialized event (below); flags are requests only.
         e['redeem_flag']=SELECT_FLAG+i;e['redeem_lot']=LOT_BASE+i
-    # One dispatcher, no wait between consumption and award. Restart clears
+    # One dispatcher, no wait between marker removal and award. Restart clears
     # every request, so simultaneously set flags cannot redeem one token twice.
     choices=[e for e in entries if e.get('custom')]
     dispatch=[ins(2003,66,'<B3xIB3x',0,e['redeem_flag'],0) for e in choices]
     dispatch += [ins(3,0,'<bBBxI',-1,1,0,e['redeem_flag']) for e in choices]
     dispatch += [ins(0,0,'<bBb x',0,1,-1),
-                 ins(3,4,'<bB2xiB3x',1,3,TOKEN_GOODS,1),
+                 ins(4,5,'<b3xIiBb2xf',1,PLAYER,TOKEN_EFFECT,1,0,1.0),
                  ins(1000,2,'<BBb x',1,0,1)]
     for e in choices:
         dispatch += [ins(1003,1,'<BBBxI',3,0,0,e['redeem_flag']),
-                     ins(2003,24,'<B3xii',3,TOKEN_GOODS,1),
+                     ins(2004,21,'<Ii',PLAYER,TOKEN_EFFECT),
                      ins(2003,107,'<i',e['redeem_lot']),
                      ins(1000,4,'<B3x',1)]
     dispatch.append(ins(1000,4,'<B3x',1))

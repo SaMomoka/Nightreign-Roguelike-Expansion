@@ -1,0 +1,113 @@
+{
+  "status": "READ_ONLY_STATIC_AND_RUNTIME_EVIDENCE",
+  "exe_sha256": "9545E8732919BB6A63904CB73223641B3C4F9A67869BE5722612ACCA413E8B3A",
+  "goods_lookup_rva": "0xE8D840",
+  "reward_grant_rva": "0x57A0F0",
+  "runtime_indexes": [
+    {
+      "param": "EquipParamGoods",
+      "descriptor_index": 3,
+      "index_count": 446,
+      "sorted": true,
+      "rows": [
+        {
+          "id": 8000,
+          "raw_present": true,
+          "lookup_matches": [
+            [
+              8000,
+              104
+            ]
+          ]
+        },
+        {
+          "id": 8000000,
+          "raw_present": true,
+          "lookup_matches": [
+            [
+              8000000,
+              373
+            ]
+          ]
+        },
+        {
+          "id": 8900000,
+          "raw_present": true,
+          "lookup_matches": [
+            [
+              8900000,
+              432
+            ]
+          ]
+        },
+        {
+          "id": 8900999,
+          "raw_present": true,
+          "lookup_matches": [
+            [
+              8900999,
+              444
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "param": "PermanentBuffParam",
+      "descriptor_index": 222,
+      "index_count": 135,
+      "sorted": true,
+      "rows": [
+        {
+          "id": 8000000,
+          "raw_present": true,
+          "lookup_matches": [
+            [
+              8000000,
+              57
+            ]
+          ]
+        },
+        {
+          "id": 8900000,
+          "raw_present": true,
+          "lookup_matches": [
+            [
+              8900000,
+              116
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "param": "SpEffectParam",
+      "descriptor_index": 15,
+      "index_count": 13484,
+      "sorted": true,
+      "rows": [
+        {
+          "id": 8000000,
+          "raw_present": true,
+          "lookup_matches": [
+            [
+              8000000,
+              12213
+            ]
+          ]
+        },
+        {
+          "id": 8900000,
+          "raw_present": true,
+          "lookup_matches": [
+            [
+              8900000,
+              13027
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "game_flow_verified": false
+}

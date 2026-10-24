@@ -1,4 +1,4 @@
-param([Parameter(Mandatory=$true)][string]$Package,[string]$ProjectRoot='E:\Codex\Project\黑环mod')
+﻿param([Parameter(Mandatory=$true)][string]$Package,[string]$ProjectRoot='E:\Codex\Project\黑环mod')
 $ErrorActionPreference='Stop'
 $root=(Resolve-Path $ProjectRoot).Path;$folder=(Resolve-Path $Package).Path
 if(-not $folder.StartsWith((Join-Path $root 'local/packages')+[IO.Path]::DirectorySeparatorChar)){throw 'Outside packages'}
@@ -50,11 +50,14 @@ foreach($e in @($plan.entries | Where-Object {-not $_.token})){
  if(-not $e.custom -and ([TrainingBuild]::Get($fx,'spEffectTextId_1') -ne $e.text_id -or [TrainingBuild]::Get($pb,'spEffectId') -ne $e.source_effect)){throw 'Native candidate differs from export'}
 }
 if($plan.token_goods){
- $token=Clone $params.EquipParamGoods (One $params.EquipParamGoods 8000) $plan.token_goods
- if([TrainingBuild]::Get($token,'goodsType') -ne 2){throw 'Unverified key item template'}
- foreach($field in 'isDrop','enable_ActiveBigRune','isConsume','isEquip','isDeposit','disableParam_NT','useLimitSpEffectType','enableVisualCodex'){SetCell $token $field 0}
- SetCell $token 'vagrantItemLotId' -1;SetCell $token 'maxNum' 1;SetCell $token 'iconId' 20291
- if([TrainingBuild]::Get($token,'goodsType') -ne 2 -or [TrainingBuild]::Get($token,'refId_default') -ne -1){throw 'Token must not be an equipable consumable'}
+ # Match the native permanent reward path; a key item remains an inventory item.
+ $token=Clone $params.EquipParamGoods (One $params.EquipParamGoods 8000000) $plan.token_goods
+ $markerBuff=Clone $params.PermanentBuffParam (One $params.PermanentBuffParam 8000000) $plan.token_goods
+ $markerEffect=Clone $params.SpEffectParam (One $params.SpEffectParam 8000000) $plan.token_goods
+ SetCell $token 'vagrantItemLotId' $plan.token_goods
+ SetCell $markerBuff 'spEffectId' $plan.token_goods;SetCell $markerBuff 'numericValue' 0
+ SetCell $markerEffect 'maxHpRate' 1;SetCell $markerEffect 'spEffectTextId_1' $plan.token_goods
+ if([TrainingBuild]::Get($token,'goodsType') -ne 11){throw 'Marker must use permanent reward path'}
  foreach($e in @($plan.entries | Where-Object custom)){
   $lot=Clone $params.ItemLotParam_map (One $params.ItemLotParam_map 1) $e.redeem_lot
   for($slot=1;$slot -le 8;$slot++){
@@ -175,10 +178,10 @@ foreach($lang in 'zhocn','engus'){
 foreach($e in @($plan.entries | Where-Object custom)){if(@($fm.Entries | Where-Object ID -eq $e.goods_id).Count){throw 'Buff text collision'};$fm.Entries.Add([SoulsFormats.FMG+Entry]::new($fm,[int]$e.goods_id,[string]$e.name))};$f[0].Bytes=$fm.Write()
  }
  if($plan.token_goods){
-  foreach($bank in 'GoodsName.fmg','GoodsInfo.fmg','GoodsCaption.fmg'){
+  foreach($bank in 'GoodsName.fmg','GoodsInfo.fmg','GoodsCaption.fmg','PermanentBuffName.fmg','PermanentBuffInfo.fmg','AttachEffectName.fmg','AttachEffectInfo.fmg'){
    $tf=@($msg.Files | Where-Object {$_.Name.EndsWith('\'+$bank)})[0];$tm=[SoulsFormats.FMG]::Read($tf.Bytes)
    if(@($tm.Entries | Where-Object ID -eq $plan.token_goods).Count){throw 'Token text collision'}
-   $label=if($bank -eq 'GoodsName.fmg'){'数值强化'}else{'领取后，从数值强化中任选一项。取消可稍后继续选择。'}
+   $label=if($bank -like '*Name.fmg'){'数值强化'}else{'领取后，从数值强化中任选一项。取消可稍后继续选择。'}
    $tm.Entries.Add([SoulsFormats.FMG+Entry]::new($tm,[int]$plan.token_goods,$label));$tf.Bytes=$tm.Write()
   }
  }
