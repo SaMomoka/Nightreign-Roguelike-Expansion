@@ -72,7 +72,7 @@ def compile_menu(entries):
     for n,v in nodes.items():
         v['id']=ids[n]
         for c in v['conditions']:c['target']=ids.get(c['target'],c['target'])
-    return dict(states=list(nodes.values()),texts=texts,labels=labels,root_state=ids['root'],state_first=STATE_BASE,state_end=STATE_BASE+len(nodes),entries=entries,pool_ids=POOL_IDS,request_flag=FLAG)
+    return dict(states=list(nodes.values()),texts=texts,labels=labels,root_state=ids['root'],state_first=STATE_BASE,state_end=STATE_BASE+len(nodes),entries=entries,pool_ids=POOL_IDS,request_flag=FLAG,spawn_reference_entities=[10000404,10000405])
 
 def encode_pool(original,offset,goods):
     if len(original)!=36 or offset!=8 or goods not in (*range(1900630000,1900630006),8000000,8010000,8020000,8100000,8200000,8200500):

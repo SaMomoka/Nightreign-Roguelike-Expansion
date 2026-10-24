@@ -9,7 +9,6 @@ from training_buff_menu import compile_menu,catalog,FLAG
 def event_plan():
     def instr(bank,op,fmt,*args):return dict(bank=bank,id=op,hex=struct.pack(fmt,*args).hex())
     return [instr(2003,66,'<B3xIB3x',0,FLAG,0),instr(3,0,'<bBBxI',0,1,0,FLAG),
-            instr(2004,42,'<IB3xIiI',10000980,2,10000,-1,10000),instr(1001,1,'<i',2),
             instr(2004,37,'<I',10000980),instr(2003,66,'<B3xIB3x',0,FLAG,0),instr(1000,4,'<B3x',1)]
 
 def audit(plan):

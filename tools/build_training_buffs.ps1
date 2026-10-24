@@ -84,10 +84,16 @@ $carrier=@($map.Parts.Enemies | Where-Object {$_.Name -eq 'c0100_9014' -and $_.T
 if($carrier.Count -ne 1 -or @($map.Parts.GetEntries() | Where-Object {$_.EntityData.EntityID -eq 10000980}).Count){throw 'Map source/collision mismatch'}
 $clone=$carrier[0].DeepCopy();$clone.Name='c0100_9980';$clone.InstanceID=9980;$clone.EntityData.EntityID=10000980
 $clone.EntityData.EntityGroupIDs=[uint32[]]@(0,0,0,0,0,0,0,0);$clone.TalkID=0;$clone.NpcParamId=1900600000
-$clone.Position=[Numerics.Vector3]::new(39.5,10.008,96.2);$map.Parts.Enemies.Add($clone)
+if(($plan.spawn_reference_entities -join ',') -ne '10000404,10000405'){throw 'Unapproved training ground anchors'}
+$anchors=@($map.Parts.Enemies | Where-Object {$_.EntityData.EntityID -in $plan.spawn_reference_entities})
+if($anchors.Count -ne 2 -or @($anchors | Where-Object {$_.ModelName -ne 'c8131'}).Count -ne 0 -or [Math]::Abs($anchors[0].Position.Y-$anchors[1].Position.Y) -gt 0.5){throw 'Training anchor geometry changed'}
+$spawnX=($anchors[0].Position.X+$anchors[1].Position.X)/2
+$spawnZ=($anchors[0].Position.Z+$anchors[1].Position.Z)/2
+$spawnY=[Math]::Max($anchors[0].Position.Y,$anchors[1].Position.Y)+0.25
+$clone.Position=[Numerics.Vector3]::new($spawnX,$spawnY,$spawnZ);$map.Parts.Enemies.Add($clone)
 $dest=Join-Path $folder "mod/$mapRelative";[IO.Directory]::CreateDirectory([IO.Path]::GetDirectoryName($dest)) | Out-Null;$map.Write($dest)
 $rmap=[SoulsFormats.MSB_NR]::Read($dest);$rm=@($rmap.Parts.Enemies | Where-Object Name -eq 'c0100_9980');if($rm.Count -ne 1){throw 'Missing carrier'}
-[void]$rmap.Parts.Enemies.Remove($rm[0]);if((Hash $rmap.Write()) -ne (Hash $mapOriginal)){throw 'Other map entities changed'}
+if([Numerics.Vector3]::Distance($rm[0].Position,$clone.Position) -gt 0.001){throw 'Spawn position roundtrip failed'};[void]$rmap.Parts.Enemies.Remove($rm[0]);if((Hash $rmap.Write()) -ne (Hash $mapOriginal)){throw 'Other map entities changed'}
 
 $eventRelative='event/m10_00_00_00.emevd.dcx';$ev=[SoulsFormats.EMEVD]::Read((Join-Path $root "local/training/original/$eventRelative"));$eventOriginal=$ev.Write()
 if(@($ev.Events | Where-Object ID -eq 10009880).Count){throw 'Event collision'}
@@ -131,4 +137,4 @@ foreach($lang in 'zhocn','engus'){
   foreach($e in @($plan.entries | Where-Object custom)){if(@($fm.Entries | Where-Object ID -eq $e.goods_id).Count){throw 'Buff text collision'};$fm.Entries.Add([SoulsFormats.FMG+Entry]::new($fm,[int]$e.goods_id,[string]$e.name))};$f[0].Bytes=$fm.Write()
  };$msg.Write($path)
 }
-@{status='BUILD_PASS_GAME_TEST_PENDING';custom_buffs=6;native_controls=6;owned_pool_rows=3;original_params_preserved=$true;original_map_preserved=$true;original_events_preserved=$true;original_training_preserved=$true;game_verified=$false;drop_command='2004[37] Force Character Treasure: training reward path requires game test'} | ConvertTo-Json | Set-Content (Join-Path $folder 'training-build-report.json') -Encoding utf8
+@{status='BUILD_PASS_GAME_TEST_PENDING';spawn_position=@($spawnX,$spawnY,$spawnZ);spawn_reference_entities=@(10000404,10000405);custom_buffs=6;native_controls=6;owned_pool_rows=3;original_params_preserved=$true;original_map_preserved=$true;original_events_preserved=$true;original_training_preserved=$true;game_verified=$false;drop_command='2004[37] Force Character Treasure: training reward path requires game test'} | ConvertTo-Json | Set-Content (Join-Path $folder 'training-build-report.json') -Encoding utf8

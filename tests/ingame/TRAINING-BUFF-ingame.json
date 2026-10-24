@@ -8,5 +8,13 @@
   "selection_verified": false,
   "buff_effect_verified": false,
   "repeat_generation_verified": false,
-  "correction": "Warp only custom carrier to player and copy floor before spawning"
+  "correction": "Place carrier directly between original training targets 10000404 and 10000405",
+  "second_attempt": {
+    "package": "training_buffs_20261024_163054_ff420c",
+    "user_reply": "还是在里面，交互不了",
+    "observation": "Read-only screenshot shows drop behind tent furniture",
+    "player_warp_fix_verified": false,
+    "location_user_feedback": "箱子和弓架中间偏后"
+  },
+  "pending_package": "training_buffs_20261024_163559_c2fe0f"
 }
