@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "status": "RUNTIME_REQUESTS_OBSERVED_USER_ACCEPTANCE_PENDING",
+  "package": "full_relic_20261021_002759_c09b6e",
+  "normal_candidates": 406,
+  "deep_positive_candidates": 326,
+  "deep_negative_candidates": 24,
+  "deep_positives_requiring_negative": 49,
+  "unit_tests_passed": 110,
+  "conditional_pairs_checked": 1176,
+  "design_validation": "PASS_INTEGRATION_NOT_VERIFIED",
+  "observed_runtime_scope": [
+    "unique_native_mailbox_bound",
+    "native_slot_label_requests",
+    "normal_recipe_prepared_with_readback_and_shop_response",
+    "deep_positive_requested_negative_then_pair_committed",
+    "duplicate_positive_rejected"
+  ],
+  "unverified_scope": [
+    "full_catalog_purchase_result_and_currency",
+    "all_four_editors_in_game",
+    "replacement_of_cursed_positive_with_curse_free_positive_in_game",
+    "repeat_crafting_different_recipes_preserves_previous_items",
+    "restart_persistence",
+    "map_transition_reconnection",
+    "multiplayer"
+  ],
+  "original_regulation_sha256_unchanged": true,
+  "formal_save_sha256_unchanged": true,
+  "documentation": "docs/19-full-relic-runtime.md"
+}

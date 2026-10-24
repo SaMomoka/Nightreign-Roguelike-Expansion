@@ -1,0 +1,40 @@
+{
+  "status": "PASS",
+  "game_verified": false,
+  "checks": [
+    {
+      "case": "weighted",
+      "status": "PASS",
+      "changed_cells": 6,
+      "output_sha256": "494042D2609B0057DDAF0535CDF1802850F2BDFABA8D85BDF5CDB0067AEE33E4"
+    },
+    {
+      "case": "three_choices_probe",
+      "status": "PASS",
+      "changed_cells": 13,
+      "output_sha256": "E0062F8257F4063BCE7CA04A3028521728A5CFFC8120E9F54C93BE4308D3FE72"
+    },
+    {
+      "case": "distinct_choices",
+      "status": "PASS",
+      "changed_cells": 14,
+      "output_sha256": "A1D34441B37DDDD2E9B94261AEE384D046AB59C4A9D6C1D6F17F154D28DEDC89"
+    },
+    {
+      "case": "wrong_ordinal",
+      "status": "REJECTED_AS_EXPECTED"
+    },
+    {
+      "case": "wrong_guard",
+      "status": "REJECTED_AS_EXPECTED"
+    },
+    {
+      "case": "overflow_weight",
+      "status": "REJECTED_AS_EXPECTED"
+    },
+    {
+      "case": "missing_guard",
+      "status": "REJECTED_AS_EXPECTED"
+    }
+  ]
+}

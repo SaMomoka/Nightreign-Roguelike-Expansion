@@ -1,0 +1,96 @@
+{
+  "status": "BUILD_AND_POOL_STRUCTURE_VERIFIED_GAME_PENDING",
+  "source_sha256": "876A3CA279A4561D0C69F81FE5E510C75C59AB9A8A201694F8CF4A42C91E0268",
+  "changed_cells": 14,
+  "choice_families": [
+    {
+      "pool_id": 4200101,
+      "goods_ids": [
+        8000000,
+        8010000,
+        8010100,
+        8020000,
+        8020200
+      ],
+      "sp_effect_ids": [
+        8000000,
+        8010000,
+        8010100,
+        8020000,
+        8020200
+      ],
+      "native_members": 5
+    },
+    {
+      "pool_id": 4200102,
+      "goods_ids": [
+        8100000,
+        8100500,
+        8120000,
+        8330103
+      ],
+      "sp_effect_ids": [
+        8100000,
+        8100500,
+        8120000,
+        8330103
+      ],
+      "native_members": 4
+    },
+    {
+      "pool_id": 4200103,
+      "goods_ids": [
+        8200000,
+        8200500,
+        8210700,
+        8230000
+      ],
+      "sp_effect_ids": [
+        8200000,
+        8200500,
+        8210700,
+        8230000
+      ],
+      "native_members": 4
+    }
+  ],
+  "reward_scope": {
+    "before_patch": [
+      {
+        "pool_id": 4200101,
+        "parent_tables": [],
+        "enemy_lot_reference_count": 0,
+        "enemy_lot_references": []
+      },
+      {
+        "pool_id": 4200102,
+        "parent_tables": [],
+        "enemy_lot_reference_count": 0,
+        "enemy_lot_references": []
+      },
+      {
+        "pool_id": 4200103,
+        "parent_tables": [],
+        "enemy_lot_reference_count": 0,
+        "enemy_lot_references": []
+      }
+    ],
+    "scope": "Direct ItemTable and enemy ItemLot references only; not an exhaustive script/map reachability audit",
+    "fort_base_npcs": [
+      43510020,
+      44700010
+    ]
+  },
+  "game_verified": false,
+  "user_deferred_game_tests": true,
+  "workbench_build_button_verified": true,
+  "workbench_game_launch_clicked": false,
+  "load_observation": {
+    "old_probe_loaded_to_roundtable": true,
+    "map_key_produced_observable_result": false,
+    "reward_menu_observed": false
+  },
+  "formal_save_unchanged": true,
+  "original_regulation_unchanged": true,
+  "unit_tests_passed": 52
+}

@@ -1,0 +1,61 @@
+{
+  "id": "EXP-001",
+  "status": "MINIMAL_SINGLE_PLAYER_PASS",
+  "reason": "用户确认最大HP1517→1593、持续时间正常、到期恢复1517；切回原版配置后同条件虾子前后均1517。",
+  "app_version": "1.03.3",
+  "regulation_version": "1.03.5",
+  "original_sha256": "876A3CA279A4561D0C69F81FE5E510C75C59AB9A8A201694F8CF4A42C91E0268",
+  "modified_sha256": "40DFCC0B1AEC698502A611CFB1BBE2A38FAD33F4D108D89FC78A6A41B638D231",
+  "param": "SpEffectParam",
+  "row_id": 500830,
+  "field": "maxHpRate",
+  "before": 1.0,
+  "after": 1.05,
+  "baseline_hp": 1517,
+  "modified_hp": 1593,
+  "rollback_hp": 1517,
+  "evidence_files": [
+    "local/evidence/EXP-001-build.json",
+    "local/evidence/environment.json",
+    "local/evidence/EXP-001-integrity.json",
+    "local/evidence/rollback-launch.log"
+  ],
+  "tester": "用户手动实测；数值由用户报告，非自动截图读数",
+  "carrier": "Boiled Prawn",
+  "goods_id": 830,
+  "duration_seconds": 60,
+  "build_validation": {
+    "experiment": "EXP-001",
+    "carrier": "Boiled Prawn",
+    "goods_id": 830,
+    "regulation_internal_version": "10350000",
+    "original_sha256": "876A3CA279A4561D0C69F81FE5E510C75C59AB9A8A201694F8CF4A42C91E0268",
+    "modified_sha256": "40DFCC0B1AEC698502A611CFB1BBE2A38FAD33F4D108D89FC78A6A41B638D231",
+    "param": "SpEffectParam",
+    "row_id": 500830,
+    "field": "maxHpRate",
+    "before": 1.0,
+    "after": 1.05,
+    "unchanged_duration_seconds": 60,
+    "changed_cells": 1,
+    "other_bundle_files_unchanged": true,
+    "roundtrip_validation": "PASS",
+    "game_test": "PENDING",
+    "library_sha256": "854742628B9054E94FCE9790364BE8E13396649E73BDD6C63FB592B44C9257D3"
+  },
+  "observed_gain_percent": 5.0098879367171945,
+  "duration_user_confirmed": true,
+  "pending_checks": [
+    "同来源伤害承受",
+    "重复使用与倒地/复活/远征结束",
+    "Seamless双人同步"
+  ],
+  "integrity_check": {
+    "formal_save_unchanged": true,
+    "game_regulation_unchanged": true,
+    "checked_at": "2026-10-20T21:01:03.7296246+08:00",
+    "phase": "after rollback"
+  },
+  "expired_hp": 1517,
+  "acceptance_scope": "Task F minimal native parameter experiment; not Phase 1 or multiplayer acceptance"
+}

@@ -1,0 +1,28 @@
+{
+  "id": "EXP-RELIC005",
+  "status": "DEEP_PAIR_GENERATE_PERSIST_UNEQUIP_PASS",
+  "carrier_id": 2000300,
+  "positive_effect": 6001400,
+  "curse_effect": 6830000,
+  "user_report": "均有效，可恢复，已退出",
+  "exact_stat_values": null,
+  "checks": {
+    "positive_effect": true,
+    "negative_effect": true,
+    "unequip_cleanup": true,
+    "persist_without_patch": true
+  },
+  "build_report": {
+    "status": "BUILD_VERIFIED_GAME_PENDING",
+    "source_sha256": "876A3CA279A4561D0C69F81FE5E510C75C59AB9A8A201694F8CF4A42C91E0268",
+    "output_sha256": "294EB2375984A9A7F85A6891CA290461AD31F196E70C422DE6020F982F58BE7D",
+    "changes": [
+      "EquipParamAntique|2000300|attachEffectTableId_1|2000000|6001400",
+      "EquipParamAntique|2000300|attachEffectTableId_curse1|3000000|6830000",
+      "ShopLineupParam|10041|equipId|1270|2000300"
+    ],
+    "other_resources_unchanged": true,
+    "manifest_sha256": "AD70DE6DDC652B90215A27F5F530D667B3A3BDD33641D37FD52675BA4016D2A0"
+  },
+  "persistence_user_report": "都没问题，之后不用做一个验证一个了，按你的理解来就行，相信你"
+}

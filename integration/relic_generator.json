@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "app_version": "1.03.3",
+  "regulation_version": "1.03.5",
+  "regulation_sha256": "876A3CA279A4561D0C69F81FE5E510C75C59AB9A8A201694F8CF4A42C91E0268",
+  "route": "native_shop_generation_then_unload_parameter_patch",
+  "single_relic": {
+    "shop_row": 10041,
+    "random_template": 129,
+    "effects": [
+      7000000,
+      7000100,
+      7000200
+    ],
+    "original_slot_pools": [
+      300,
+      200,
+      100
+    ],
+    "test": "tests/ingame/EXP-RELIC003.json",
+    "status": "USER_CONFIRMED_PASS"
+  },
+  "two_relics": {
+    "shop_rows": [
+      10041,
+      10032
+    ],
+    "templates": [
+      129,
+      132
+    ],
+    "status": "USER_CONFIRMED_GENERATE_PERSIST_UNEQUIP_PASS",
+    "test": "tests/ingame/EXP-RELIC004.json"
+  },
+  "scope": [
+    "isolated_single_player",
+    "do_not_modify_native_effect_values"
+  ],
+  "release_verified": false,
+  "multiplayer_verified": false,
+  "deep_game_verified": true,
+  "deep_single_relic": {
+    "template_id": 2000300,
+    "effect_id": 6001400,
+    "curse_id": 6830000,
+    "test": "tests/ingame/EXP-RELIC005.json",
+    "status": "USER_CONFIRMED_GENERATE_PERSIST_UNEQUIP_PASS"
+  },
+  "deep_verification_scope": "One positive+curse pair only; full mixed depth layouts not game-tested",
+  "combined_depths": "MANIFEST_VALIDATED_NOT_GAME_TESTED"
+}

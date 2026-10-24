@@ -1,0 +1,112 @@
+{
+  "regulation_sha256": "876A3CA279A4561D0C69F81FE5E510C75C59AB9A8A201694F8CF4A42C91E0268",
+  "status": "PASS",
+  "scope": "IDs, ordinal and listed numeric fields; imported display names are not authenticated",
+  "tables": [
+    {
+      "table": "ItemTableParam",
+      "rows": 34730,
+      "fields": [
+        "itemCategory",
+        "itemId",
+        "chanceWeight",
+        "quantity",
+        "onlyForClass",
+        "eventFlagId",
+        "disableParam_NT",
+        "unknown_6",
+        "unknown_7"
+      ],
+      "status": "PASS",
+      "csv_sha256": "50A01A50607E8698222639D0041A881FC987704ED87E4026F7E13583735F8D92"
+    },
+    {
+      "table": "EquipParamGoods",
+      "rows": 433,
+      "fields": [
+        "goodsType",
+        "vagrantItemLotId"
+      ],
+      "status": "PASS",
+      "csv_sha256": "769DE6AFC558BBE06C5898C3FBADCF283C925E80072ACC180D7114855ECEAC47"
+    },
+    {
+      "table": "PermanentBuffParam",
+      "rows": 123,
+      "fields": [
+        "spEffectId",
+        "numericValue",
+        "displayNumericValue",
+        "displayPercentageSymbol",
+        "graceSpEffectId"
+      ],
+      "status": "PASS",
+      "csv_sha256": "119C9F2F375F0C7667FE2CDEF6C64A94EC7610DF08645FB939F4921D1CA7C888"
+    },
+    {
+      "table": "SpEffectParam",
+      "rows": 13472,
+      "fields": [
+        "maxHpRate",
+        "maxMpRate",
+        "maxStaminaRate",
+        "physicsAttackRate",
+        "slashDamageCutRate",
+        "blowDamageCutRate",
+        "thrustDamageCutRate",
+        "neutralDamageCutRate",
+        "magicDamageCutRate",
+        "fireDamageCutRate",
+        "thunderDamageCutRate",
+        "darkDamageCutRate",
+        "effectEndurance",
+        "spCategory",
+        "saveCategory"
+      ],
+      "status": "PASS",
+      "csv_sha256": "CD3E12C5AD3BA4C62053D734AB3C4295F15FB23A1695D3AB939439BD2AA450EC"
+    },
+    {
+      "table": "ItemLotParam_enemy",
+      "rows": 2741,
+      "fields": [
+        "lotItemId01",
+        "lotItemId02",
+        "lotItemId03",
+        "lotItemId04",
+        "lotItemId05",
+        "lotItemId06",
+        "lotItemId07",
+        "lotItemId08",
+        "lotItemCategory01",
+        "lotItemCategory02",
+        "lotItemCategory03",
+        "lotItemCategory04",
+        "lotItemCategory05",
+        "lotItemCategory06",
+        "lotItemCategory07",
+        "lotItemCategory08",
+        "lotItemBasePoint01",
+        "lotItemBasePoint02",
+        "lotItemBasePoint03",
+        "lotItemBasePoint04",
+        "lotItemBasePoint05",
+        "lotItemBasePoint06",
+        "lotItemBasePoint07",
+        "lotItemBasePoint08"
+      ],
+      "status": "PASS",
+      "csv_sha256": "1A3D9E2F7E45C31AA7F29FAB994EA9D007D0DC0B293CC169B5FDFD41F4C7E9F2"
+    },
+    {
+      "table": "NpcParam",
+      "rows": 3016,
+      "fields": [
+        "rewardItemLot_1",
+        "rewardItemLot_2"
+      ],
+      "status": "PASS",
+      "csv_sha256": "9EA037D4E4A961B33818E5D44DC13D6DEF29439BF0DF7C92BEE56D605A389814"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "source_sha256": "876A3CA279A4561D0C69F81FE5E510C75C59AB9A8A201694F8CF4A42C91E0268",
+  "pool_id": 4200100,
+  "status": "EXPERIMENTAL_NATIVE_REWARD_ADAPTER",
+  "buffs": [
+    {"id":"NRE-NUM-HP","name":"生命上限","goods_id":8000000,"permanent_buff_id":8000000,"sp_effect_id":8000000,"weight":200,"effect_fields":{"maxHpRate":1.1}},
+    {"id":"NRE-NUM-FP","name":"FP上限","goods_id":8010000,"permanent_buff_id":8010000,"sp_effect_id":8010000,"weight":200,"effect_fields":{"maxMpRate":1.1}},
+    {"id":"NRE-NUM-STAMINA","name":"精力上限","goods_id":8020000,"permanent_buff_id":8020000,"sp_effect_id":8020000,"weight":200,"effect_fields":{"maxStaminaRate":1.1}},
+    {"id":"NRE-NUM-PHYSICAL","name":"物理攻击","goods_id":8100000,"permanent_buff_id":8100000,"sp_effect_id":8100000,"weight":200,"effect_fields":{"physicsAttackRate":1.06}},
+    {"id":"NRE-NUM-DEFENSE","name":"物理减伤","goods_id":8200000,"permanent_buff_id":8200000,"sp_effect_id":8200000,"weight":200,"effect_fields":{"slashDamageCutRate":0.88,"blowDamageCutRate":0.88,"thrustDamageCutRate":0.88,"neutralDamageCutRate":0.88}},
+    {"id":"NRE-NUM-AFFINITY-DEFENSE","name":"属性减伤","goods_id":8200500,"permanent_buff_id":8200500,"sp_effect_id":8200500,"weight":200,"effect_fields":{"magicDamageCutRate":0.88,"fireDamageCutRate":0.88,"thunderDamageCutRate":0.88,"darkDamageCutRate":0.88}}
+  ]
+}

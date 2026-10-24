@@ -1,0 +1,7 @@
+{
+  "status": "PASS",
+  "scope": "Existing six-effect relic manifest rebuilt by extended builder; declared changes only",
+  "changed_cells": 8,
+  "other_resources_unchanged": true,
+  "new_game_test": false
+}

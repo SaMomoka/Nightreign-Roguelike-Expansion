@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "stage": "Phase 1",
+  "status": "NATIVE_REWARD_EXPERIMENT_BUILT",
+  "user_accepted_relic_milestone": true,
+  "source_sha256": "876A3CA279A4561D0C69F81FE5E510C75C59AB9A8A201694F8CF4A42C91E0268",
+  "definition": "data/phase1_native_buffs.json",
+  "builder": "tools/phase1_rewards.py",
+  "native_buff_count": 6,
+  "weighted_pool_id": 4200100,
+  "weighted_changed_cells": 6,
+  "three_choices_probe_changed_cells": 13,
+  "game_verified": false,
+  "three_choices_verified": false,
+  "additive_stacking_verified": false,
+  "mechanism_dedup_implemented": false,
+  "per_player_dynamic_weights_implemented": false,
+  "revival_verified": false,
+  "expedition_cleanup_verified": false,
+  "multiplayer_verified": false,
+  "identity_contract": {
+    "player_id": null,
+    "expedition_id": null,
+    "reward_id": null,
+    "state_version": null,
+    "note": "Static native parameters; no claimed event or identity adapter"
+  },
+  "distinct_choices_changed_cells": 14,
+  "choice_pool_members": [
+    5,
+    4,
+    4
+  ],
+  "choice_pool_disjoint_verified": true,
+  "workbench_available": true,
+  "user_deferred_game_tests": true,
+  "private_nested_pool_count": 9,
+  "tiered_native_candidates": 26,
+  "rarity_weights_native_param_implemented": true,
+  "supported_rarity_tiers": [
+    "normal",
+    "rare"
+  ],
+  "tiered_game_verified": false,
+  "combined_relic_reward_package_implemented": true,
+  "combined_game_verified": false,
+  "runtime_interface_research": "docs/15-runtime-interface-research.md"
+}

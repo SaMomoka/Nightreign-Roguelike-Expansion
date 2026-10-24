@@ -1,0 +1,44 @@
+{
+  "status": "PASS",
+  "game_verified": false,
+  "checks": [
+    {
+      "case": "full_roundtrip",
+      "status": "PASS",
+      "new_rows": 32,
+      "route_changes": 8
+    },
+    {
+      "case": "cycle",
+      "status": "REJECTED_AS_EXPECTED"
+    },
+    {
+      "case": "missing_target",
+      "status": "REJECTED_AS_EXPECTED"
+    },
+    {
+      "case": "empty_root",
+      "status": "REJECTED_AS_EXPECTED"
+    },
+    {
+      "case": "collision",
+      "status": "REJECTED_AS_EXPECTED"
+    },
+    {
+      "case": "wrong_template",
+      "status": "REJECTED_AS_EXPECTED"
+    },
+    {
+      "case": "overflow",
+      "status": "REJECTED_AS_EXPECTED"
+    },
+    {
+      "case": "arbitrary_field",
+      "status": "REJECTED_AS_EXPECTED"
+    },
+    {
+      "case": "wrong_route",
+      "status": "REJECTED_AS_EXPECTED"
+    }
+  ]
+}

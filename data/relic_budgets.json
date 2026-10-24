@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "design_only": true,
+  "normal": {
+    "normal": 6,
+    "deep": 0
+  },
+  "depths": {
+    "1": {
+      "normal": 5,
+      "deep": 2
+    },
+    "2": {
+      "normal": 5,
+      "deep": 3
+    },
+    "3": {
+      "normal": 6,
+      "deep": 3
+    },
+    "4": {
+      "normal": 6,
+      "deep": 4
+    },
+    "5": {
+      "normal": 6,
+      "deep": 5
+    }
+  },
+  "catalog_policy": {
+    "normal_template_ids": [
+      100,
+      101,
+      102
+    ],
+    "evidence": "Native ordinary scenes 100/101/102 reference pools100/200/300; exclude other unresolved and debug templates",
+    "status": "conservative_research_subset"
+  }
+}

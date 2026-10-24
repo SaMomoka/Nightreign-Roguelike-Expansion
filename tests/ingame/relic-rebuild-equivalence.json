@@ -1,0 +1,7 @@
+{
+  "status": "PASS",
+  "resource_count": 252,
+  "all_decrypted_resources_identical": true,
+  "encrypted_hash_equal": false,
+  "note": "Encrypted container bytes differ; all decrypted resource bytes and identities match tested six-effect build."
+}

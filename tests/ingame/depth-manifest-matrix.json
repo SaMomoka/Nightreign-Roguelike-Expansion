@@ -1,0 +1,42 @@
+[
+  {
+    "depth": 1,
+    "normal": 5,
+    "deep": 2,
+    "relics": 3,
+    "changes": 11,
+    "status": "MANIFEST_VALIDATED_NOT_GAME_TESTED"
+  },
+  {
+    "depth": 2,
+    "normal": 5,
+    "deep": 3,
+    "relics": 3,
+    "changes": 12,
+    "status": "MANIFEST_VALIDATED_NOT_GAME_TESTED"
+  },
+  {
+    "depth": 3,
+    "normal": 6,
+    "deep": 3,
+    "relics": 3,
+    "changes": 13,
+    "status": "MANIFEST_VALIDATED_NOT_GAME_TESTED"
+  },
+  {
+    "depth": 4,
+    "normal": 6,
+    "deep": 4,
+    "relics": 4,
+    "changes": 15,
+    "status": "MANIFEST_VALIDATED_NOT_GAME_TESTED"
+  },
+  {
+    "depth": 5,
+    "normal": 6,
+    "deep": 5,
+    "relics": 4,
+    "changes": 16,
+    "status": "MANIFEST_VALIDATED_NOT_GAME_TESTED"
+  }
+]

@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "icons": [
+    {
+      "buff_id": "BUFF-005",
+      "asset": null,
+      "placeholder": true,
+      "atlas": null,
+      "index": null,
+      "game_format": null
+    },
+    {
+      "buff_id": "BUFF-006",
+      "asset": null,
+      "placeholder": true,
+      "atlas": null,
+      "index": null,
+      "game_format": null
+    },
+    {
+      "buff_id": "BUFF-012",
+      "asset": null,
+      "placeholder": true,
+      "atlas": null,
+      "index": null,
+      "game_format": null
+    },
+    {
+      "buff_id": "BUFF-014",
+      "asset": null,
+      "placeholder": true,
+      "atlas": null,
+      "index": null,
+      "game_format": null
+    },
+    {
+      "buff_id": "BUFF-015",
+      "asset": null,
+      "placeholder": true,
+      "atlas": null,
+      "index": null,
+      "game_format": null
+    }
+  ]
+}

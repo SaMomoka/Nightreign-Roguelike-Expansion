@@ -1,0 +1,105 @@
+{
+  "schema_version": 1,
+  "design_only": true,
+  "candidate_count": 3,
+  "rarity_weights": {
+    "common": 70,
+    "rare": 25,
+    "gold": 4,
+    "red": 1
+  },
+  "max_chain_depth": 4,
+  "max_events_per_root": 16,
+  "max_rerolls_per_reward": 1,
+  "max_rerolls_per_run": 3,
+  "max_synergy_multiplier": 2,
+  "minimum_off_build_share": 0.1,
+  "numeric_stacking": "base_additive_then_cap",
+  "candidate_duplicates": false,
+  "synergies": [
+    {
+      "id": "SYN-001",
+      "requires": [
+        "BUFF-006",
+        "BUFF-012"
+      ],
+      "excludes": [],
+      "priority": 10,
+      "trigger": "heartsteel_growth",
+      "emits": "growth_bonus",
+      "cooldown_seconds": 50,
+      "max_stacks": 1,
+      "per_root_limit": 1,
+      "overwrite": "add_capped",
+      "max_triggers_per_run": 60
+    },
+    {
+      "id": "SYN-002",
+      "requires": [
+        "BUFF-001"
+      ],
+      "requires_tags": [
+        "native_ailment"
+      ],
+      "excludes": [],
+      "priority": 20,
+      "trigger": "element_mark",
+      "emits": "ailment_bonus",
+      "cooldown_seconds": 1,
+      "max_stacks": 1,
+      "per_root_limit": 1,
+      "overwrite": "strongest",
+      "max_triggers_per_run": 100
+    },
+    {
+      "id": "SYN-003",
+      "requires": [
+        "BUFF-008",
+        "BUFF-013"
+      ],
+      "excludes": [],
+      "priority": 30,
+      "trigger": "skill_recast",
+      "emits": "cross_class_bonus",
+      "cooldown_seconds": 30,
+      "max_stacks": 1,
+      "per_root_limit": 1,
+      "overwrite": "reject",
+      "max_triggers_per_run": 20
+    },
+    {
+      "id": "SYN-004",
+      "requires": [
+        "BUFF-010"
+      ],
+      "requires_tags": [
+        "native_grease"
+      ],
+      "excludes": [],
+      "priority": 40,
+      "trigger": "grease_consumed",
+      "emits": "grease_duration",
+      "cooldown_seconds": 1,
+      "max_stacks": 3,
+      "per_root_limit": 1,
+      "overwrite": "refresh_capped",
+      "max_triggers_per_run": 100
+    },
+    {
+      "id": "SYN-005",
+      "requires": [
+        "BUFF-003",
+        "BUFF-012"
+      ],
+      "excludes": [],
+      "priority": 50,
+      "trigger": "heartsteel_growth",
+      "emits": "basic_growth_bonus",
+      "cooldown_seconds": 50,
+      "max_stacks": 1,
+      "per_root_limit": 1,
+      "overwrite": "add_capped",
+      "max_triggers_per_run": 60
+    }
+  ]
+}

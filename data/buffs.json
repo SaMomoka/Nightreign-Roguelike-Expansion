@@ -1,0 +1,661 @@
+{
+  "schema_version": 1,
+  "buffs": [
+    {
+      "id": "BUFF-001",
+      "name_zh": "元素连击与隐士式调和",
+      "internal_name": "elemental_combo",
+      "categories": [
+        "mechanic",
+        "combo"
+      ],
+      "rarity": "rare",
+      "base_weight": 1,
+      "prerequisites": [],
+      "exclusions": [],
+      "repeatable": false,
+      "max_stacks": 1,
+      "binding": "weapon",
+      "trigger": {
+        "event": "unmapped",
+        "cooldown_seconds": 0,
+        "duration_seconds": null
+      },
+      "parameters": {
+        "design_only": true
+      },
+      "tags": [
+        "elemental_combo"
+      ],
+      "required_buffs": [],
+      "owner": "player",
+      "sync": {
+        "required": true,
+        "transport": null
+      },
+      "game_dependencies": [],
+      "feasibility": "theoretical",
+      "game_test": "not_run",
+      "supported_versions": [],
+      "enabled": false,
+      "priority": "P2",
+      "route": "AttachEffectParam.onHitSpEffect → SpEffectParam；原生隐士标记与目标归属待解码",
+      "minimum_test": "只对一个固定敌人观察一次命中标记及过期，再测 N 次有效命中",
+      "multiplayer_risk": "每玩家×敌人计数；多段命中、范围攻击、归因和重复触发",
+      "fallback": "先固定元素附加效果；不复制调和动作"
+    },
+    {
+      "id": "BUFF-002",
+      "name_zh": "终极刷新",
+      "internal_name": "ultimate_reset",
+      "categories": [
+        "mechanic"
+      ],
+      "rarity": "gold",
+      "base_weight": 1,
+      "prerequisites": [],
+      "exclusions": [
+        "BUFF-003"
+      ],
+      "repeatable": false,
+      "max_stacks": 1,
+      "binding": "character",
+      "trigger": {
+        "event": "unmapped",
+        "cooldown_seconds": 0,
+        "duration_seconds": null
+      },
+      "parameters": {
+        "design_only": true
+      },
+      "tags": [
+        "ultimate_reset"
+      ],
+      "required_buffs": [],
+      "owner": "player",
+      "sync": {
+        "required": true,
+        "transport": null
+      },
+      "game_dependencies": [],
+      "feasibility": "theoretical",
+      "game_test": "not_run",
+      "supported_versions": [],
+      "enabled": false,
+      "priority": "P3",
+      "route": "先追踪终极施放状态与恢复效果；CoolTimeParam 仅是候选检索入口",
+      "minimum_test": "单职业完整终极消耗后补一次机会；第二次不再刷新",
+      "multiplayer_risk": "施放取消、耗尽与充满时序、队友误刷新",
+      "fallback": "降低终极冷却的原生效果"
+    },
+    {
+      "id": "BUFF-003",
+      "name_zh": "回归基本功",
+      "internal_name": "back_to_basics",
+      "categories": [
+        "mechanic",
+        "risk"
+      ],
+      "rarity": "gold",
+      "base_weight": 1,
+      "prerequisites": [],
+      "exclusions": [
+        "BUFF-002",
+        "BUFF-009"
+      ],
+      "repeatable": false,
+      "max_stacks": 1,
+      "binding": "character",
+      "trigger": {
+        "event": "unmapped",
+        "cooldown_seconds": 0,
+        "duration_seconds": null
+      },
+      "parameters": {
+        "design_only": true
+      },
+      "tags": [
+        "back_to_basics"
+      ],
+      "required_buffs": [],
+      "owner": "player",
+      "sync": {
+        "required": true,
+        "transport": null
+      },
+      "game_dependencies": [],
+      "feasibility": "theoretical",
+      "game_test": "not_run",
+      "supported_versions": [],
+      "enabled": false,
+      "priority": "P1",
+      "route": "SpEffect 攻击倍率候选；主动技能限制入口未知",
+      "minimum_test": "选择一项技能代价和一项武器收益，比较有无词条",
+      "multiplayer_risk": "共享效果误伤队友；被动伤害不应算普攻",
+      "fallback": "先做冷却代价版；禁用按键不是已知能力"
+    },
+    {
+      "id": "BUFF-004",
+      "name_zh": "奖励刷新权限",
+      "internal_name": "reward_reroll",
+      "categories": [
+        "mechanic"
+      ],
+      "rarity": "rare",
+      "base_weight": 1,
+      "prerequisites": [],
+      "exclusions": [],
+      "repeatable": false,
+      "max_stacks": 1,
+      "binding": "character",
+      "trigger": {
+        "event": "unmapped",
+        "cooldown_seconds": 0,
+        "duration_seconds": null
+      },
+      "parameters": {
+        "design_only": true
+      },
+      "tags": [
+        "reward_reroll"
+      ],
+      "required_buffs": [],
+      "owner": "player",
+      "sync": {
+        "required": true,
+        "transport": null
+      },
+      "game_dependencies": [],
+      "feasibility": "theoretical",
+      "game_test": "not_run",
+      "supported_versions": [],
+      "enabled": false,
+      "priority": "P2",
+      "route": "奖励生成事件/菜单入口待追踪；权重表不等于重抽 UI",
+      "minimum_test": "单次奖励二次生成且只提交一次获得结果",
+      "multiplayer_risk": "客户端重复请求、过期候选、重连重复扣次数",
+      "fallback": "独立确认交互；原界面不能支持则延后"
+    },
+    {
+      "id": "BUFF-005",
+      "name_zh": "飞升护符",
+      "internal_name": "ascension",
+      "categories": [
+        "mechanic",
+        "talisman",
+        "combo"
+      ],
+      "rarity": "gold",
+      "base_weight": 1,
+      "prerequisites": [],
+      "exclusions": [],
+      "repeatable": false,
+      "max_stacks": 1,
+      "binding": "character",
+      "trigger": {
+        "event": "unmapped",
+        "cooldown_seconds": 0,
+        "duration_seconds": null
+      },
+      "parameters": {
+        "design_only": true
+      },
+      "tags": [
+        "ascension"
+      ],
+      "required_buffs": [],
+      "owner": "player",
+      "sync": {
+        "required": true,
+        "transport": null
+      },
+      "game_dependencies": [],
+      "feasibility": "theoretical",
+      "game_test": "not_run",
+      "supported_versions": [],
+      "enabled": false,
+      "priority": "P2",
+      "route": "来源账本与原生叠加映射；无完整先例",
+      "minimum_test": "记录来源为此护符的两次奖励，只增益该来源",
+      "multiplayer_risk": "奖励链递归、次数不同步",
+      "fallback": "先仅解锁专属升级池，后接追加两层与刷新"
+    },
+    {
+      "id": "BUFF-006",
+      "name_zh": "龙心",
+      "internal_name": "dragon_heart",
+      "categories": [
+        "mechanic",
+        "risk",
+        "talisman"
+      ],
+      "rarity": "red",
+      "base_weight": 1,
+      "prerequisites": [],
+      "exclusions": [],
+      "repeatable": false,
+      "max_stacks": 1,
+      "binding": "character",
+      "trigger": {
+        "event": "unmapped",
+        "cooldown_seconds": 0,
+        "duration_seconds": null
+      },
+      "parameters": {
+        "design_only": true
+      },
+      "tags": [
+        "dragon_heart"
+      ],
+      "required_buffs": [],
+      "owner": "player",
+      "sync": {
+        "required": true,
+        "transport": null
+      },
+      "game_dependencies": [],
+      "feasibility": "theoretical",
+      "game_test": "not_run",
+      "supported_versions": [],
+      "enabled": false,
+      "priority": "P1",
+      "route": "SpEffect 成长分级 + 获得/死亡事件；事件来源未知",
+      "minimum_test": "获取两项 Buff、倒地、死亡、复活、结束后检查成长",
+      "multiplayer_risk": "把倒地当死亡多扣；反复重放获得事件",
+      "fallback": "固定层级生命奖励，不写存档基础属性"
+    },
+    {
+      "id": "BUFF-007",
+      "name_zh": "速度与动作强化",
+      "internal_name": "speed_action",
+      "categories": [
+        "numeric"
+      ],
+      "rarity": "rare",
+      "base_weight": 1,
+      "prerequisites": [],
+      "exclusions": [],
+      "repeatable": true,
+      "max_stacks": 5,
+      "binding": "dual_future",
+      "trigger": {
+        "event": "native_effect",
+        "cooldown_seconds": 0,
+        "duration_seconds": null
+      },
+      "parameters": {
+        "design_only": true
+      },
+      "tags": [
+        "speed_action"
+      ],
+      "required_buffs": [],
+      "owner": "player",
+      "sync": {
+        "required": true,
+        "transport": null
+      },
+      "game_dependencies": [],
+      "feasibility": "theoretical",
+      "game_test": "not_run",
+      "supported_versions": [],
+      "enabled": false,
+      "priority": "P3",
+      "route": "原生速度效果待定位；精细动作需 TAE/行为或运行时研究",
+      "minimum_test": "同武器录制前摇、判定、后摇、取消、连段和翻滚",
+      "multiplayer_risk": "动作/命中不同步、无敌帧缩放和越界",
+      "fallback": "只开放经单独验证的原生速度 Buff"
+    },
+    {
+      "id": "BUFF-008",
+      "name_zh": "小终极刷新",
+      "internal_name": "skill_reset",
+      "categories": [
+        "mechanic"
+      ],
+      "rarity": "rare",
+      "base_weight": 1,
+      "prerequisites": [],
+      "exclusions": [],
+      "repeatable": false,
+      "max_stacks": 1,
+      "binding": "character",
+      "trigger": {
+        "event": "unmapped",
+        "cooldown_seconds": 0,
+        "duration_seconds": null
+      },
+      "parameters": {
+        "design_only": true
+      },
+      "tags": [
+        "skill_reset"
+      ],
+      "required_buffs": [],
+      "owner": "player",
+      "sync": {
+        "required": true,
+        "transport": null
+      },
+      "game_dependencies": [],
+      "feasibility": "theoretical",
+      "game_test": "not_run",
+      "supported_versions": [],
+      "enabled": false,
+      "priority": "P2",
+      "route": "角色技艺消耗状态与恢复效果；职业分开映射",
+      "minimum_test": "单职业仅再施放一次，取消动作不算施放",
+      "multiplayer_risk": "各职业资源模型不同、再触发递归",
+      "fallback": "先做技艺冷却缩短"
+    },
+    {
+      "id": "BUFF-009",
+      "name_zh": "技艺与终极技充能",
+      "internal_name": "ability_charges",
+      "categories": [
+        "mechanic"
+      ],
+      "rarity": "gold",
+      "base_weight": 1,
+      "prerequisites": [],
+      "exclusions": [
+        "BUFF-003"
+      ],
+      "repeatable": false,
+      "max_stacks": 1,
+      "binding": "character",
+      "trigger": {
+        "event": "unmapped",
+        "cooldown_seconds": 0,
+        "duration_seconds": null
+      },
+      "parameters": {
+        "design_only": true
+      },
+      "tags": [
+        "ability_charges"
+      ],
+      "required_buffs": [],
+      "owner": "player",
+      "sync": {
+        "required": true,
+        "transport": null
+      },
+      "game_dependencies": [],
+      "feasibility": "theoretical",
+      "game_test": "not_run",
+      "supported_versions": [],
+      "enabled": false,
+      "priority": "P3",
+      "route": "原生额外次数字段未证实；自定义状态/UI 候选",
+      "minimum_test": "先只对单职业储存第二次机会，死亡后检查",
+      "multiplayer_risk": "UI 和真实可施放状态不一致",
+      "fallback": "额外刷新券替代真正多层充能"
+    },
+    {
+      "id": "BUFF-010",
+      "name_zh": "消耗品循环",
+      "internal_name": "consumable_loop",
+      "categories": [
+        "mechanic"
+      ],
+      "rarity": "rare",
+      "base_weight": 1,
+      "prerequisites": [],
+      "exclusions": [],
+      "repeatable": false,
+      "max_stacks": 1,
+      "binding": "character",
+      "trigger": {
+        "event": "unmapped",
+        "cooldown_seconds": 0,
+        "duration_seconds": null
+      },
+      "parameters": {
+        "design_only": true,
+        "consumed_n": 4,
+        "returned_m": 1,
+        "allow_infinite": false
+      },
+      "tags": [
+        "consumable_loop"
+      ],
+      "required_buffs": [],
+      "owner": "player",
+      "sync": {
+        "required": true,
+        "transport": null
+      },
+      "game_dependencies": [],
+      "feasibility": "theoretical",
+      "game_test": "not_run",
+      "supported_versions": [],
+      "enabled": false,
+      "priority": "P2",
+      "route": "物品消费完成事件、容量、返还入口；油脂效果引用待定位",
+      "minimum_test": "同物品 N=4返1，不同物品不混算；满容量不溢出",
+      "multiplayer_risk": "库存变化不是消费事件；返还触发再返还",
+      "fallback": "先做特定消耗品效果增强；油脂只延长自身持续"
+    },
+    {
+      "id": "BUFF-011",
+      "name_zh": "红色风险 Buff",
+      "internal_name": "red_risk",
+      "categories": [
+        "mechanic",
+        "risk"
+      ],
+      "rarity": "red",
+      "base_weight": 1,
+      "prerequisites": [],
+      "exclusions": [],
+      "repeatable": false,
+      "max_stacks": 1,
+      "binding": "character",
+      "trigger": {
+        "event": "unmapped",
+        "cooldown_seconds": 0,
+        "duration_seconds": null
+      },
+      "parameters": {
+        "design_only": true
+      },
+      "tags": [
+        "red_risk"
+      ],
+      "required_buffs": [],
+      "owner": "player",
+      "sync": {
+        "required": true,
+        "transport": null
+      },
+      "game_dependencies": [],
+      "feasibility": "theoretical",
+      "game_test": "not_run",
+      "supported_versions": [],
+      "enabled": false,
+      "priority": "P1",
+      "route": "SpEffect 攻防/异常候选；异常伤害和倒地条分别未知",
+      "minimum_test": "分别测试输出积累、受到积累、异常伤害、倒地恢复",
+      "multiplayer_risk": "全局改变敌人状态会影响未选玩家",
+      "fallback": "先做本人持续掉血+经验证的恢复；其他子型保留"
+    },
+    {
+      "id": "BUFF-012",
+      "name_zh": "心之钢",
+      "internal_name": "heartsteel",
+      "categories": [
+        "mechanic",
+        "talisman"
+      ],
+      "rarity": "rare",
+      "base_weight": 1,
+      "prerequisites": [],
+      "exclusions": [],
+      "repeatable": false,
+      "max_stacks": 1,
+      "binding": "character",
+      "trigger": {
+        "event": "unmapped",
+        "cooldown_seconds": 50,
+        "duration_seconds": null
+      },
+      "parameters": {
+        "design_only": true,
+        "radius_m": null,
+        "dwell_seconds": 10,
+        "hp_per_proc": 5,
+        "target_cd_seconds": 50,
+        "max_growth_hp": 300
+      },
+      "tags": [
+        "heartsteel"
+      ],
+      "required_buffs": [],
+      "owner": "player",
+      "sync": {
+        "required": true,
+        "transport": null
+      },
+      "game_dependencies": [],
+      "feasibility": "theoretical",
+      "game_test": "not_run",
+      "supported_versions": [],
+      "enabled": false,
+      "priority": "P2",
+      "route": "EMEDF 距离/计时有依据；动态实体归属账本未证实",
+      "minimum_test": "固定敌人在范围连续10秒，命中+5；50秒CD；出圈重置计时",
+      "multiplayer_risk": "实体复用、刷新重生、两玩家竞争同目标",
+      "fallback": "先限定唯一 Boss 实例，每阶段限次"
+    },
+    {
+      "id": "BUFF-013",
+      "name_zh": "跨职业技艺联动",
+      "internal_name": "cross_class",
+      "categories": [
+        "mechanic",
+        "combo"
+      ],
+      "rarity": "gold",
+      "base_weight": 1,
+      "prerequisites": [],
+      "exclusions": [],
+      "repeatable": false,
+      "max_stacks": 1,
+      "binding": "character",
+      "trigger": {
+        "event": "unmapped",
+        "cooldown_seconds": 0,
+        "duration_seconds": null
+      },
+      "parameters": {
+        "design_only": true
+      },
+      "tags": [
+        "cross_class"
+      ],
+      "required_buffs": [],
+      "owner": "player",
+      "sync": {
+        "required": true,
+        "transport": null
+      },
+      "game_dependencies": [],
+      "feasibility": "theoretical",
+      "game_test": "not_run",
+      "supported_versions": [],
+      "enabled": false,
+      "priority": "P3",
+      "route": "AttachEffect/SpEffect/BehaviorParam_PC/Bullet 候选；完整角色技艺非参数复制",
+      "minimum_test": "先额外附加一个无位移增益，再研究铁眼/女爵/追踪者",
+      "multiplayer_risk": "递归、目标选取、远程执行与不匹配动画",
+      "fallback": "仅附带简化标记/数值效果，分三组件"
+    },
+    {
+      "id": "BUFF-014",
+      "name_zh": "小蜗召唤物",
+      "internal_name": "snail_companion",
+      "categories": [
+        "mechanic",
+        "summon"
+      ],
+      "rarity": "rare",
+      "base_weight": 1,
+      "prerequisites": [],
+      "exclusions": [],
+      "repeatable": false,
+      "max_stacks": 1,
+      "binding": "character",
+      "trigger": {
+        "event": "unmapped",
+        "cooldown_seconds": 0,
+        "duration_seconds": null
+      },
+      "parameters": {
+        "design_only": true
+      },
+      "tags": [
+        "snail_companion"
+      ],
+      "required_buffs": [],
+      "owner": "player",
+      "sync": {
+        "required": true,
+        "transport": null
+      },
+      "game_dependencies": [],
+      "feasibility": "theoretical",
+      "game_test": "not_run",
+      "supported_versions": [],
+      "enabled": false,
+      "priority": "P3",
+      "route": "BuddyParam/原生召唤事件/AI/地图实体候选；未证实任意新实体生成",
+      "minimum_test": "先复用一个已有友军，检查归属、跟随、过门和死亡恢复",
+      "multiplayer_risk": "主客机重复生成、导航卡住、Boss门和断线孤儿",
+      "fallback": "原生友军限时支援；暂不承诺蜗牛模型"
+    },
+    {
+      "id": "BUFF-015",
+      "name_zh": "死亡召唤与暴怒之熊",
+      "internal_name": "death_bear",
+      "categories": [
+        "mechanic",
+        "summon"
+      ],
+      "rarity": "rare",
+      "base_weight": 1,
+      "prerequisites": [],
+      "exclusions": [],
+      "repeatable": false,
+      "max_stacks": 1,
+      "binding": "character",
+      "trigger": {
+        "event": "unmapped",
+        "cooldown_seconds": 0,
+        "duration_seconds": null
+      },
+      "parameters": {
+        "design_only": true
+      },
+      "tags": [
+        "death_bear"
+      ],
+      "required_buffs": [],
+      "owner": "player",
+      "sync": {
+        "required": true,
+        "transport": null
+      },
+      "game_dependencies": [],
+      "feasibility": "theoretical",
+      "game_test": "not_run",
+      "supported_versions": [],
+      "enabled": false,
+      "priority": "P3",
+      "route": "死亡/倒地状态检测与 Buddy 候选；死亡后施效入口未知",
+      "minimum_test": "先在单一死亡节点触发一次已有范围效果",
+      "multiplayer_risk": "倒地/死亡/复活连触发、全灭后实体残留",
+      "fallback": "先死亡时友方增益，熊为后续升级"
+    }
+  ]
+}

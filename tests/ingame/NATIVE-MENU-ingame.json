@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-20T23:22:01.847398+08:00",
+  "status": "PASS_NATIVE_MENU_ZHOCN_SINGLE_PLAYER",
+  "package": "native_menu_20261020_231346_2f212c",
+  "savefile": "NRE_native_menu_20261020_231346_2f212c.sl2",
+  "language": "zhocn",
+  "start_online": false,
+  "seamless_configured_in_profile": false,
+  "evidence_sources": [
+    "ME3 asset override log",
+    "Observed game screenshots",
+    "User hands-on test report"
+  ],
+  "main_menu_display": "PASS_USER_CONFIRMED",
+  "original_shop": "PASS_USER_CONFIRMED_AND_SCREEN_OBSERVED",
+  "preset_submenu_display": "PASS_SCREEN_OBSERVED",
+  "preset_1_single_product": "PASS_USER_CONFIRMED",
+  "preset_2_single_product": "PASS_USER_CONFIRMED",
+  "cancel_back_leave": "PASS_USER_CONFIRMED",
+  "purchase_and_currency_deduction": "PASS_USER_CONFIRMED",
+  "obtained_relic_correct_effects": "PASS_USER_CONFIRMED",
+  "acquisition_notification": "PASS_SCREEN_OBSERVED",
+  "user_report": "全部正常",
+  "loaded_assets": {
+    "mod\\regulation.bin": true,
+    "mod\\msg\\zhocn\\menu_dlc01.msgbnd.dcx": true,
+    "mod\\script\\talk\\m10_00_00_00.talkesdbnd.dcx": true
+  },
+  "package_integrity_verified": true,
+  "formal_save_unchanged": true,
+  "installed_regulation_unchanged": true,
+  "excluded_from_this_acceptance": [
+    "English menu",
+    "Multiplayer",
+    "Post-restart persistence for this package",
+    "Equipping both relics in this package",
+    "Expedition reward choices",
+    "Additive caps",
+    "Per-player deduplication",
+    "Expedition cleanup"
+  ],
+  "automation_note": "UI input was stopped when the helper detected user activity; manual steps were reported by the user.",
+  "game_left_running": true
+}

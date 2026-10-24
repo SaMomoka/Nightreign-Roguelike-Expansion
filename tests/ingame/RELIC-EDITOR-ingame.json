@@ -1,0 +1,17 @@
+{
+  "status": "USER_CONFIRMED_CRAFTING",
+  "package": "relic_editor_20261020_233531_320b91",
+  "source": "user_report",
+  "statement": "测试制作是没问题",
+  "verified_scope": [
+    "curated_editor_crafting"
+  ],
+  "unverified_scope": [
+    "full_catalog_editor",
+    "conditional_negative_runtime_selection",
+    "repeat_purchase",
+    "restart_persistence",
+    "multiplayer"
+  ],
+  "full_catalog_runtime_bound": false
+}

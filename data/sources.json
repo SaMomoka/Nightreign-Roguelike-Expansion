@@ -1,0 +1,121 @@
+[
+  {
+    "id": "S01",
+    "title": "Smithbox 官方说明",
+    "url": "https://github.com/vawser/Smithbox",
+    "finding": "支持 Nightreign 参数编辑；不能由此确认所有机制。",
+    "accessed": "2026-10-20"
+  },
+  {
+    "id": "S02",
+    "title": "NR 参数类型表",
+    "url": "https://github.com/vawser/Smithbox/blob/main/src/Smithbox.Data/Assets/PARAM/NR/Param%20Type%20Info.json",
+    "finding": "确认 NR 类型，包括 AttachEffect、CoolTime、Buddy、行为和攻击表；表存在不代表原生使用。",
+    "accessed": "2026-10-20"
+  },
+  {
+    "id": "S03",
+    "title": "NR AttachEffectTable 元数据",
+    "url": "https://github.com/vawser/Smithbox/blob/main/src/Smithbox.Data/Assets/PARAM/NR/Param%20Meta/AttachEffectTableParam.xml",
+    "finding": "attachEffectId 指向 AttachEffectParam；chanceWeight / chanceWeight_dlc 存在。",
+    "accessed": "2026-10-20"
+  },
+  {
+    "id": "S04",
+    "title": "NR AttachEffect 元数据",
+    "url": "https://github.com/vawser/Smithbox/blob/main/src/Smithbox.Data/Assets/PARAM/NR/Param%20Meta/AttachEffectParam.xml",
+    "finding": "onHitSpEffect、passiveSpEffectId_1/2/3、职业过滤、compatibilityId/exclusivityId、文本和图标引用存在。",
+    "accessed": "2026-10-20"
+  },
+  {
+    "id": "S05",
+    "title": "NR SpEffect 元数据",
+    "url": "https://github.com/vawser/Smithbox/blob/main/src/Smithbox.Data/Assets/PARAM/NR/Param%20Meta/SpEffectParam.xml",
+    "finding": "maxHpRate、maxMpRate、maxStaminaRate、攻击与伤害削减倍率字段存在；行 ID 和生效条件未知。",
+    "accessed": "2026-10-20"
+  },
+  {
+    "id": "S06",
+    "title": "NR 武器元数据",
+    "url": "https://github.com/vawser/Smithbox/blob/main/src/Smithbox.Data/Assets/PARAM/NR/Param%20Meta/EquipParamWeapon.xml",
+    "finding": "spEffectBehaviorId0 引用 SpEffectParam；不能推出所有背包被动的范围。",
+    "accessed": "2026-10-20"
+  },
+  {
+    "id": "S07",
+    "title": "DarkScript3 发布页",
+    "url": "https://github.com/AinTunez/DarkScript3/releases",
+    "finding": "3.6.3 可见；3.6.2 添加 NR 1.03 指令并指出部分未知、复杂事件回编译例外。",
+    "accessed": "2026-10-20"
+  },
+  {
+    "id": "S08",
+    "title": "Nightreign EMEDF",
+    "url": "https://soulsmods.github.io/emedf/nr-emedf.html",
+    "finding": "有计时、距离、事件值、伤害来源和角色状态条件；并非任意技能回调 API。",
+    "accessed": "2026-10-20"
+  },
+  {
+    "id": "S09",
+    "title": "Mod Engine 3 官方仓库",
+    "url": "https://github.com/garyttierney/me3",
+    "finding": "支持 Nightreign 和 Windows；Apache-2.0/MIT（logo 例外）。",
+    "accessed": "2026-10-20"
+  },
+  {
+    "id": "S10",
+    "title": "MMV + Seamless 作者配置",
+    "url": "https://github.com/eepycloud/More-Map-Variations-MMV-Seamless-Coop",
+    "finding": "仅配置先例；nrsc.dll 的 load_early=true、离线启动；报告使用旧版组合，不保证本机兼容。",
+    "accessed": "2026-10-20"
+  },
+  {
+    "id": "S11",
+    "title": "Seamless 作者页面",
+    "url": "https://www.nexusmods.com/eldenringnightreign/mods/3",
+    "finding": "独立存档、1–6 玩家；作者未保证其他 Mod 兼容；不得未经许可修改或再分发。",
+    "accessed": "2026-10-20"
+  },
+  {
+    "id": "S12",
+    "title": "Rolling Pool Editor 作者仓库",
+    "url": "https://github.com/ip1259/Rolling_Pool_Editor",
+    "finding": "声明支持普通、深夜、Debuff 池以及基于 1.03.5 的输出；属于权重修改先例。",
+    "accessed": "2026-10-20"
+  },
+  {
+    "id": "S13",
+    "title": "Rolling Pool Editor Smithbox 指南",
+    "url": "https://github.com/ip1259/Rolling_Pool_Editor/blob/master/SMITHBOX_GUIDE_en.md",
+    "finding": "外部配置与 Smithbox CSV 路线参考；本项目不采用其内置游戏资源。",
+    "accessed": "2026-10-20"
+  },
+  {
+    "id": "S14",
+    "title": "官方 Hotfix 1.03.5",
+    "url": "https://en.bandainamcoent.eu/elden-ring/news/elden-ring-nightreign-hotfix-1035",
+    "finding": "2026-03-31：App 1.03.2、Regulation 1.03.5；不据此宣称用户安装版本。",
+    "accessed": "2026-10-20"
+  },
+  {
+    "id": "S15",
+    "title": "官方 1.03.2 更新",
+    "url": "https://www.bandainamcoent.com/news/elden-ring-nightreign-patch-notes-version-1-03-2",
+    "finding": "说明官方存在武器类别动作调整和召唤灵体行为；不是可调用接口证明。",
+    "accessed": "2026-10-20"
+  },
+  {
+    "id": "S16",
+    "title": "ME3 发布页",
+    "url": "https://github.com/garyttierney/me3/releases",
+    "finding": "安装包与发布说明入口，需固定实际下载版本及散列。",
+    "accessed": "2026-10-20"
+  },
+  {
+    "id": "S17",
+    "title": "Smithbox 发布页",
+    "url": "https://github.com/vawser/Smithbox/releases",
+    "finding": "工具版本选择入口，需确认 NR 数据版本。",
+    "accessed": "2026-10-20"
+  }
+]

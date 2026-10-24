@@ -1,0 +1,43 @@
+{
+  "id": "EXP-RELIC004",
+  "status": "SIX_EFFECTS_GENERATE_PERSIST_UNEQUIP_PASS",
+  "user_report": "没问题，已退出",
+  "effect_ids": [
+    7000000,
+    7000100,
+    7000200,
+    7000300,
+    7000400,
+    7000500
+  ],
+  "templates": [
+    129,
+    132
+  ],
+  "shop_rows": [
+    10041,
+    10032
+  ],
+  "checks": {
+    "equip_six": true,
+    "unequip_one_only_removes_its_effects": true,
+    "persist_without_patch": true
+  },
+  "build_report": {
+    "status": "BUILD_VERIFIED_GAME_PENDING",
+    "source_sha256": "876A3CA279A4561D0C69F81FE5E510C75C59AB9A8A201694F8CF4A42C91E0268",
+    "output_sha256": "129A3AB83183DB8B4E5646DE9D2A912B388EC51D2D504BD2FBFC6386D0F5F208",
+    "changes": [
+      "EquipParamAntique|129|attachEffectTableId_1|300|707000000",
+      "EquipParamAntique|129|attachEffectTableId_2|200|707000100",
+      "EquipParamAntique|129|attachEffectTableId_3|100|707000200",
+      "EquipParamAntique|132|attachEffectTableId_1|300|707000300",
+      "EquipParamAntique|132|attachEffectTableId_2|200|707000400",
+      "EquipParamAntique|132|attachEffectTableId_3|100|707000500",
+      "ShopLineupParam|10032|equipId|1200|132",
+      "ShopLineupParam|10041|equipId|1270|129"
+    ],
+    "other_resources_unchanged": true,
+    "manifest_sha256": "B5F593365E1C608B0FCF7990A50C6BB3106FE2A4F84915C25D9A566EF2E927D8"
+  }
+}

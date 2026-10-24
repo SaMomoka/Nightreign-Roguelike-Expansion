@@ -1,0 +1,130 @@
+{
+  "status": "PASS_CATALOG_AND_SELECTION_RUNTIME_UNBOUND",
+  "normal_candidates": 406,
+  "deep_candidates": 326,
+  "deep_requires_negative": 49,
+  "deep_no_negative": 277,
+  "negative_candidates": 24,
+  "positive_negative_pairs_checked": 1176,
+  "picker_pages": 254,
+  "source_sha256": "876A3CA279A4561D0C69F81FE5E510C75C59AB9A8A201694F8CF4A42C91E0268",
+  "workbook_sha256": "60F0E06D9A309C65062008CFB2CFB6E7DB4257BE1F06109EC51E110C17201F91",
+  "workbook_rule_discrepancies": [
+    {
+      "effect_id": 6003001,
+      "field": "curse_required",
+      "workbook": "附带负面词条",
+      "native": "not_in_deep_random_pools",
+      "sheet": "深夜模式局外词条（遗物+武器固有效果）",
+      "cell": "F28"
+    },
+    {
+      "effect_id": 6003101,
+      "field": "curse_required",
+      "workbook": "附带负面词条",
+      "native": "not_in_deep_random_pools",
+      "sheet": "深夜模式局外词条（遗物+武器固有效果）",
+      "cell": "F30"
+    },
+    {
+      "effect_id": 6003201,
+      "field": "curse_required",
+      "workbook": "附带负面词条",
+      "native": "not_in_deep_random_pools",
+      "sheet": "深夜模式局外词条（遗物+武器固有效果）",
+      "cell": "F32"
+    },
+    {
+      "effect_id": 6003301,
+      "field": "curse_required",
+      "workbook": "附带负面词条",
+      "native": "not_in_deep_random_pools",
+      "sheet": "深夜模式局外词条（遗物+武器固有效果）",
+      "cell": "F34"
+    },
+    {
+      "effect_id": 6003401,
+      "field": "curse_required",
+      "workbook": "附带负面词条",
+      "native": "not_in_deep_random_pools",
+      "sheet": "深夜模式局外词条（遗物+武器固有效果）",
+      "cell": "F36"
+    },
+    {
+      "effect_id": 6003501,
+      "field": "curse_required",
+      "workbook": "附带负面词条",
+      "native": "not_in_deep_random_pools",
+      "sheet": "深夜模式局外词条（遗物+武器固有效果）",
+      "cell": "F38"
+    },
+    {
+      "effect_id": 6003601,
+      "field": "curse_required",
+      "workbook": "附带负面词条",
+      "native": "not_in_deep_random_pools",
+      "sheet": "深夜模式局外词条（遗物+武器固有效果）",
+      "cell": "F40"
+    },
+    {
+      "effect_id": 6500800,
+      "field": "curse_required",
+      "workbook": "不附带负面词条",
+      "native": "not_in_deep_random_pools",
+      "sheet": "深夜模式局外词条（遗物+武器固有效果）",
+      "cell": "F240"
+    },
+    {
+      "effect_id": 6500900,
+      "field": "curse_required",
+      "workbook": "不附带负面词条",
+      "native": "not_in_deep_random_pools",
+      "sheet": "深夜模式局外词条（遗物+武器固有效果）",
+      "cell": "F241"
+    },
+    {
+      "effect_id": 6633200,
+      "field": "curse_required",
+      "workbook": "不附带负面词条",
+      "native": "not_in_deep_random_pools",
+      "sheet": "深夜模式局外词条（遗物+武器固有效果）",
+      "cell": "F187"
+    },
+    {
+      "effect_id": 6647200,
+      "field": "curse_required",
+      "workbook": "不附带负面词条",
+      "native": "not_in_deep_random_pools",
+      "sheet": "深夜模式局外词条（遗物+武器固有效果）",
+      "cell": "F242"
+    },
+    {
+      "effect_id": 6647300,
+      "field": "curse_required",
+      "workbook": "不附带负面词条",
+      "native": "not_in_deep_random_pools",
+      "sheet": "深夜模式局外词条（遗物+武器固有效果）",
+      "cell": "F243"
+    },
+    {
+      "effect_id": 6647400,
+      "field": "curse_required",
+      "workbook": "不附带负面词条",
+      "native": "not_in_deep_random_pools",
+      "sheet": "深夜模式局外词条（遗物+武器固有效果）",
+      "cell": "F244"
+    },
+    {
+      "effect_id": 6647500,
+      "field": "curse_required",
+      "workbook": "不附带负面词条",
+      "native": "not_in_deep_random_pools",
+      "sheet": "深夜模式局外词条（遗物+武器固有效果）",
+      "cell": "F245"
+    }
+  ],
+  "game_verified": false,
+  "game_launched": false,
+  "runtime_adapter": null,
+  "installed_test_package_unchanged": true
+}

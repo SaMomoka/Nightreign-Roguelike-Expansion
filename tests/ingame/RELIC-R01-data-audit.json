@@ -1,0 +1,21 @@
+{
+  "counts": {
+    "EquipParamAntique": 1397,
+    "AttachEffectTableParam": 22088,
+    "AttachEffectParam": 2079,
+    "AntiqueStandParam": 74,
+    "SpEffectParam": 13472
+  },
+  "pool_groups": 1081,
+  "pool_groups_with_repeated_id": 109,
+  "deep_raw_counts": {
+    "0": 1175,
+    "1": 222
+  },
+  "missing_pool_references": 151,
+  "missing_effect_references": 94,
+  "missing_speffect_references": 1,
+  "singleton_base_templates_with_resolved_effects": 666,
+  "status": "DATA_AUDIT_PASS_GAME_LEGALITY_UNVERIFIED",
+  "verification": "local/evidence/relic-export-verification.json"
+}

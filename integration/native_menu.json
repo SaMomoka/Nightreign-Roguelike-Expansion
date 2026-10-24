@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "status": "NATIVE_MENU_ZHOCN_SINGLE_PLAYER_VERIFIED",
+  "native_resources": true,
+  "external_ui_required_at_runtime": false,
+  "game_verified": true,
+  "native_talk_id": 605001000,
+  "current_interaction": "Choose prebuilt relics through native merchant menus",
+  "arbitrary_effect_editing": false,
+  "dynamic_reward_weights": false,
+  "in_game_generator_patch_toggle": false,
+  "multiplayer_verified": false,
+  "supported_text_languages": [
+    "zhocn",
+    "engus"
+  ],
+  "user_deferred_game_tests": false,
+  "evidence": "tests/ingame/NATIVE-MENU-ingame.json",
+  "documentation": "docs/16-native-menu.md",
+  "game_verified_scope": "zhocn single-player main/preset menus, native shop purchase, cancel/back/leave",
+  "build_evidence": "tests/ingame/NATIVE-MENU-build.json",
+  "english_game_verified": false
+}

@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "app_version": null,
+  "regulation_version": null,
+  "regulation_sha256": null,
+  "tool_versions": {},
+  "effects": [],
+  "status": "awaiting_local_evidence"
+}

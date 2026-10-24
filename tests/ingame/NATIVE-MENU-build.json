@@ -1,0 +1,72 @@
+{
+  "status": "PASS",
+  "package": "native_menu_20261020_231346_2f212c",
+  "game_launched": false,
+  "game_verified": false,
+  "new_states": 10,
+  "modified_original_states": 1,
+  "added_texts": {
+    "engus": 6,
+    "zhocn": 6
+  },
+  "menu_presets": 2,
+  "graph_audit": {
+    "state_targets_checked": true,
+    "no_cycles_without_modal_wait": true,
+    "original_shop_preserved": true,
+    "preset_shop_ranges_checked": true
+  },
+  "original_esd_restoration_verified": true,
+  "binder_roundtrip_verified": true,
+  "regulation_unchanged_from_combined": true,
+  "negative_cases": [
+    {
+      "case": "unguarded_cycle",
+      "status": "PASS"
+    },
+    {
+      "case": "lost_wait",
+      "status": "PASS"
+    },
+    {
+      "case": "wrong_shop",
+      "status": "PASS"
+    },
+    {
+      "case": "missing_back",
+      "status": "PASS"
+    },
+    {
+      "case": "dangling",
+      "status": "PASS"
+    },
+    {
+      "case": "duplicate_state",
+      "status": "PASS"
+    },
+    {
+      "case": "outside_shop",
+      "status": "PASS"
+    },
+    {
+      "case": "duplicate_shop",
+      "status": "PASS"
+    },
+    {
+      "case": "empty_label",
+      "status": "PASS"
+    },
+    {
+      "case": "too_many_presets",
+      "status": "PASS"
+    }
+  ],
+  "resources": {
+    "script/talk/m10_00_00_00.talkesdbnd.dcx": "91E5A69515683BB74E0A24B0D15B5FC84D1EF24B9AAB1BD5A3DF9A52712CC3DA",
+    "msg/zhocn/menu_dlc01.msgbnd.dcx": "F9428C55CCA32134507E703EF0500B75EB4640123642FCB80CD2B052483B1667",
+    "msg/engus/menu_dlc01.msgbnd.dcx": "1B75B440E3CD9DA1F1AA6605E33E63C5A8AA127E42D89485F9410D9898AD8515"
+  },
+  "formal_save_unchanged": true,
+  "installed_regulation_unchanged": true,
+  "unit_tests_passed": 76
+}

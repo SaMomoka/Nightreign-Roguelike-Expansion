@@ -1,0 +1,39 @@
+{
+  "status": "PASS",
+  "package": "combined_20261020_225546_ab13c5",
+  "resource_count": 252,
+  "original_resources": 248,
+  "relic_resources": 2,
+  "reward_resources": 2,
+  "negative_cases": [
+    {
+      "case": "conflict",
+      "status": "PASS"
+    },
+    {
+      "case": "swapped",
+      "status": "PASS"
+    },
+    {
+      "case": "input_changed",
+      "status": "PASS"
+    },
+    {
+      "case": "missing_relic_changes",
+      "status": "PASS"
+    },
+    {
+      "case": "existing_output",
+      "status": "PASS"
+    },
+    {
+      "case": "outside_output",
+      "status": "PASS"
+    }
+  ],
+  "game_launched": false,
+  "game_verified": false,
+  "formal_save_unchanged": true,
+  "installed_regulation_unchanged": true,
+  "unit_tests_passed": 69
+}

@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "player_id": null,
+  "character": null,
+  "mode": "normal",
+  "depth": null,
+  "catalog_hash": null,
+  "normal_effects": [],
+  "deep_bundles": [],
+  "status": "draft_not_applicable"
+}

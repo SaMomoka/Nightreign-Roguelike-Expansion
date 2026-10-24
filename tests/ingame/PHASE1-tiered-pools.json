@@ -1,0 +1,251 @@
+{
+  "status": "PRIVATE_NESTED_POOLS_BUILD_VERIFIED",
+  "game_verified": false,
+  "user_deferred_game_tests": true,
+  "source_sha256": "876A3CA279A4561D0C69F81FE5E510C75C59AB9A8A201694F8CF4A42C91E0268",
+  "allocated_pool_ids": [
+    1900100000,
+    1900100001,
+    1900100002,
+    1900100003,
+    1900100004,
+    1900100005,
+    1900100006,
+    1900100007,
+    1900100008
+  ],
+  "allocation_kind": "new NRE IDs; collision checked against pinned original",
+  "new_rows": 32,
+  "route_changes": 8,
+  "original_item_table_rows_unchanged": true,
+  "other_resources_unchanged": true,
+  "rarity_weights": {
+    "normal": 75,
+    "rare": 25
+  },
+  "choice_families": [
+    {
+      "pool_id": 1900100000,
+      "goods_ids": [
+        8000000,
+        8000001,
+        8010000,
+        8010001,
+        8010100,
+        8010101,
+        8020000,
+        8020001,
+        8020200,
+        8020201
+      ],
+      "sp_effect_ids": [
+        8000000,
+        8000001,
+        8010000,
+        8010001,
+        8010100,
+        8010101,
+        8020000,
+        8020001,
+        8020200,
+        8020201
+      ],
+      "native_members": 10,
+      "normal_pool_id": 1900100001,
+      "rare_pool_id": 1900100002
+    },
+    {
+      "pool_id": 1900100003,
+      "goods_ids": [
+        8100000,
+        8100001,
+        8100500,
+        8100501,
+        8120000,
+        8120001,
+        8330103,
+        8330104
+      ],
+      "sp_effect_ids": [
+        8100000,
+        8100001,
+        8100500,
+        8100501,
+        8120000,
+        8120001,
+        8330103,
+        8330104
+      ],
+      "native_members": 8,
+      "normal_pool_id": 1900100004,
+      "rare_pool_id": 1900100005
+    },
+    {
+      "pool_id": 1900100006,
+      "goods_ids": [
+        8200000,
+        8200001,
+        8200500,
+        8200501,
+        8210700,
+        8210701,
+        8230000,
+        8230001
+      ],
+      "sp_effect_ids": [
+        8200000,
+        8200001,
+        8200500,
+        8200501,
+        8210700,
+        8210701,
+        8230000,
+        8230001
+      ],
+      "native_members": 8,
+      "normal_pool_id": 1900100007,
+      "rare_pool_id": 1900100008
+    }
+  ],
+  "probability_report": {
+    "1900100000": {
+      "8000000": {
+        "numerator": 3,
+        "denominator": 16,
+        "percent": 18.75
+      },
+      "8000001": {
+        "numerator": 1,
+        "denominator": 16,
+        "percent": 6.25
+      },
+      "8010000": {
+        "numerator": 3,
+        "denominator": 16,
+        "percent": 18.75
+      },
+      "8010001": {
+        "numerator": 1,
+        "denominator": 16,
+        "percent": 6.25
+      },
+      "8010100": {
+        "numerator": 3,
+        "denominator": 32,
+        "percent": 9.375
+      },
+      "8010101": {
+        "numerator": 1,
+        "denominator": 32,
+        "percent": 3.125
+      },
+      "8020000": {
+        "numerator": 3,
+        "denominator": 16,
+        "percent": 18.75
+      },
+      "8020001": {
+        "numerator": 1,
+        "denominator": 16,
+        "percent": 6.25
+      },
+      "8020200": {
+        "numerator": 3,
+        "denominator": 32,
+        "percent": 9.375
+      },
+      "8020201": {
+        "numerator": 1,
+        "denominator": 32,
+        "percent": 3.125
+      }
+    },
+    "1900100003": {
+      "8100000": {
+        "numerator": 3,
+        "denominator": 10,
+        "percent": 30.0
+      },
+      "8100001": {
+        "numerator": 1,
+        "denominator": 10,
+        "percent": 10.0
+      },
+      "8100500": {
+        "numerator": 3,
+        "denominator": 20,
+        "percent": 15.0
+      },
+      "8100501": {
+        "numerator": 1,
+        "denominator": 20,
+        "percent": 5.0
+      },
+      "8120000": {
+        "numerator": 3,
+        "denominator": 20,
+        "percent": 15.0
+      },
+      "8120001": {
+        "numerator": 1,
+        "denominator": 20,
+        "percent": 5.0
+      },
+      "8330103": {
+        "numerator": 3,
+        "denominator": 20,
+        "percent": 15.0
+      },
+      "8330104": {
+        "numerator": 1,
+        "denominator": 20,
+        "percent": 5.0
+      }
+    },
+    "1900100006": {
+      "8200000": {
+        "numerator": 1,
+        "denominator": 4,
+        "percent": 25.0
+      },
+      "8200001": {
+        "numerator": 1,
+        "denominator": 12,
+        "percent": 8.333333333333334
+      },
+      "8200500": {
+        "numerator": 1,
+        "denominator": 4,
+        "percent": 25.0
+      },
+      "8200501": {
+        "numerator": 1,
+        "denominator": 12,
+        "percent": 8.333333333333334
+      },
+      "8210700": {
+        "numerator": 1,
+        "denominator": 8,
+        "percent": 12.5
+      },
+      "8210701": {
+        "numerator": 1,
+        "denominator": 24,
+        "percent": 4.166666666666667
+      },
+      "8230000": {
+        "numerator": 1,
+        "denominator": 8,
+        "percent": 12.5
+      },
+      "8230001": {
+        "numerator": 1,
+        "denominator": 24,
+        "percent": 4.166666666666667
+      }
+    }
+  },
+  "unit_tests_passed": 61,
+  "workbench_tiered_build_verified": true,
+  "game_launched_this_batch": false
+}

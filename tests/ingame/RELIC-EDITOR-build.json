@@ -1,0 +1,72 @@
+{
+  "status": "PASS_BUILD_GAME_PENDING",
+  "products": 83,
+  "price": 1,
+  "currency_cost_type": 4,
+  "normal_editors": 2,
+  "deep_editors": 2,
+  "pages": 3658,
+  "new_states": 15125,
+  "texts_per_language": 65,
+  "original_param_rows_preserved": true,
+  "original_esd_restoration_verified": true,
+  "all_resource_roundtrips_verified": true,
+  "no_cycles_without_modal_wait": true,
+  "native_slot_membership_verified": true,
+  "user_difficulty_budget_enforced": false,
+  "game_verified": false,
+  "limitations": [
+    "Drafts last only while editing that relic; returning to the four-entry menu resets drafts",
+    "Craft opens a native single-product purchase confirmation at 1 Murk",
+    "New relic definition IDs require keeping this mod installed; vanilla rollback is not provided",
+    "Candidate subset only; deep slot 1 binds a curse, slots 2 and 3 use native curse-free pools",
+    "Daily normal/deep difficulty budgets are not enforced by this editor; multiplayer unsupported",
+    "Repeat crafting stock behavior and new relic IDs require in-game verification"
+  ],
+  "package": "relic_editor_20261020_233531_320b91",
+  "negative_checks": [
+    {
+      "case": "incomplete_purchase",
+      "status": "PASS"
+    },
+    {
+      "case": "deep_curse_removed",
+      "status": "PASS"
+    },
+    {
+      "case": "wrong_product",
+      "status": "PASS"
+    },
+    {
+      "case": "wrong_currency",
+      "status": "PASS"
+    },
+    {
+      "case": "duplicate_effect",
+      "status": "PASS"
+    },
+    {
+      "case": "wrong_entry_count",
+      "status": "PASS"
+    },
+    {
+      "case": "price_not_one",
+      "status": "PASS"
+    },
+    {
+      "case": "random_effect_pool",
+      "status": "PASS"
+    },
+    {
+      "case": "removed_required_curse",
+      "status": "PASS"
+    },
+    {
+      "case": "duplicate_product_id",
+      "status": "PASS"
+    }
+  ],
+  "normal_products": 20,
+  "deep_products": 63,
+  "game_launched_this_check": false
+}

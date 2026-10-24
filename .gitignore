@@ -1,0 +1,16 @@
+local/
+dist/
+__pycache__/
+*.pyc
+.venv/
+*.bin
+*.dcx
+*.bnd
+*.dll
+*.exe
+*.sl2
+*.co2
+*.log
+*.bak
+*.local.json
+.env*

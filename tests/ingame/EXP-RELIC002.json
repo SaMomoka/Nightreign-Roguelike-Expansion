@@ -1,0 +1,31 @@
+{
+  "id": "EXP-RELIC002",
+  "status": "USER_CONFIRMED_EQUIP_EFFECT_PASS",
+  "carrier_id": 1270,
+  "shop_row_id": 10041,
+  "effect_ids": [
+    7000000,
+    7000100,
+    7000200
+  ],
+  "user_report": "遗物有效，数值加成符合修改后的词条",
+  "exact_stat_values": null,
+  "unequip_cleanup": "NOT_REPORTED",
+  "limitations": [
+    "固定商店遗物载体验证，不是原版随机遗物合法性证明",
+    "未验证多人或正式存档应用"
+  ],
+  "build_report": {
+    "status": "BUILD_VERIFIED_GAME_PENDING",
+    "source_sha256": "876A3CA279A4561D0C69F81FE5E510C75C59AB9A8A201694F8CF4A42C91E0268",
+    "output_sha256": "BCC4C79D03E0EA8800E6E75627ED8DA7F8DAD3372C5112B962A23C0AB93C1DD7",
+    "changes": [
+      "EquipParamAntique|1270|attachEffectTableId_1|707005600|707000000",
+      "EquipParamAntique|1270|attachEffectTableId_2|707000001|707000100",
+      "EquipParamAntique|1270|attachEffectTableId_3|707001001|707000200"
+    ],
+    "other_resources_unchanged": true,
+    "manifest_sha256": "622254626E9821A98F2A83D625EAA6E29C49CBE68606C9D7342382CD2618CE64"
+  },
+  "savefile": "NRE_RELIC002.sl2"
+}

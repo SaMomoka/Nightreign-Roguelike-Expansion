@@ -1,0 +1,37 @@
+{
+  "id": "EXP-RELIC003",
+  "status": "SINGLE_RELIC_GENERATE_PERSIST_UNEQUIP_PASS",
+  "carrier_id": 129,
+  "shop_row_id": 10041,
+  "effect_ids": [
+    7000000,
+    7000100,
+    7000200
+  ],
+  "native_pool_ids": [
+    300,
+    200,
+    100
+  ],
+  "savefile": "NRE_RELIC003.sl2",
+  "build_report": {
+    "status": "BUILD_VERIFIED_GAME_PENDING",
+    "source_sha256": "876A3CA279A4561D0C69F81FE5E510C75C59AB9A8A201694F8CF4A42C91E0268",
+    "output_sha256": "5C609C875C1CEA15707394B21E67259E3519D9B62179235D876C376BF1A91893",
+    "changes": [
+      "EquipParamAntique|129|attachEffectTableId_1|300|707000000",
+      "EquipParamAntique|129|attachEffectTableId_2|200|707000100",
+      "EquipParamAntique|129|attachEffectTableId_3|100|707000200",
+      "ShopLineupParam|10041|equipId|1270|129"
+    ],
+    "other_resources_unchanged": true,
+    "manifest_sha256": "D2D0C48B41C29697756D7AB72B60D4EFE3595AF6B56CF8458B93E1247AE23996"
+  },
+  "checks": {
+    "shop_display": true,
+    "equip_effect": true,
+    "persist_without_patch": true,
+    "unequip_cleanup": true
+  },
+  "user_report": "保留且有效，卸下后加成消失"
+}
