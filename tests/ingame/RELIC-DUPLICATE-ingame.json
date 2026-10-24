@@ -1,0 +1,15 @@
+{
+  "status": "USER_CONFIRMED_DUPLICATE_LOSS",
+  "date": "2026-10-24",
+  "package": "full_relic_20261024_154338_42f7da",
+  "observation": "Purchased relic shows only one of repeated identical effects in Relic Rites",
+  "input_effect_id": 7000090,
+  "read_only_observed_input_pools": [
+    707000090,
+    707000090,
+    707000090
+  ],
+  "game_internal_filter_branch_confirmed": false,
+  "candidate_package": "full_relic_20261024_155430_b4d2db",
+  "candidate_game_verified": false
+}

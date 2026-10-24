@@ -31,6 +31,12 @@ public static class NreFull {
   foreach(var c in r.Cells)if(c.Def.InternalName==field)return Convert.ToInt32(c.Value);
   throw new Exception("Missing param field");
  }
+ public static bool Same(PARAM.Row a,PARAM.Row b,string field){
+  object x=a.Cells.First(c=>c.Def.InternalName==field).Value;
+  object y=b.Cells.First(c=>c.Def.InternalName==field).Value;
+  if(x is byte[] && y is byte[])return ((byte[])x).SequenceEqual((byte[])y);
+  return object.Equals(x,y);
+ }
  public static void Check(Dictionary<long,ESD.State> states, long first,long end, HashSet<long> waits){
   var done=new HashSet<long>();var stack=new HashSet<long>();
   foreach(long id in states.Keys.Where(k=>k>=first&&k<end))Walk(id,states,first,end,waits,done,stack);
@@ -58,6 +64,33 @@ function Param($bundle,$name){
 $regPath=Join-Path $folder 'mod/regulation.bin'
 $reg=[SoulsFormats.SFUtil]::DecryptNightreignRegulation($regPath)
 if($reg.Version -ne '10350000'){throw 'Unexpected regulation version'}
+# Clone only custom aliases. Original effects and native gameplay fields stay unchanged.
+$effects=Param $reg 'AttachEffectParam';$pools=Param $reg 'AttachEffectTableParam'
+$effectMap=@{};foreach($r in $effects.table.Rows){$effectMap[[int]$r.ID]=$r}
+$poolMap=@{};foreach($r in $pools.table.Rows){if(-not $poolMap.ContainsKey([int]$r.ID)){$poolMap[[int]$r.ID]=@()};$poolMap[[int]$r.ID]+=$r}
+$aliasCount=0
+foreach($alias in $plan.duplicate_aliases){
+    if($alias.effect_id -lt 1800000000 -or $alias.effect_id -ge 1800010000 -or $alias.pool_id -ne $alias.effect_id){throw 'Unapproved alias allocation'}
+    if($effectMap.ContainsKey([int]$alias.effect_id) -or $poolMap.ContainsKey([int]$alias.pool_id)){throw 'Duplicate alias collision'}
+    $src=$effectMap[[int]$alias.source_effect]
+    $choices=@($poolMap[[int]$alias.source_pool] | Where-Object {([NreFull]::Get($_,'chanceWeight') -gt 0 -and [NreFull]::Get($_,'chanceWeight_dlc') -ne 0)})
+    if($null -eq $src -or $choices.Count -ne 1 -or [NreFull]::Get($choices[0],'attachEffectId') -ne $alias.source_effect){throw 'Unverified deterministic alias source'}
+    $copy=[SoulsFormats.PARAM+Row]::new($src);$copy.ID=[int]$alias.effect_id
+    # These are project-owned group IDs, not claims about unused native IDs.
+    [NreFull]::Set($copy,'compatibilityId',[int]$alias.effect_id)
+    [NreFull]::Set($copy,'exclusivityId',[int]$alias.effect_id)
+    foreach($cell in $src.Cells){
+        if($cell.Def.InternalName -notin @('compatibilityId','exclusivityId')){
+            if(-not [NreFull]::Same($copy,$src,$cell.Def.InternalName)){throw 'Alias changed gameplay or text field'}
+        }
+    }
+    $pool=[SoulsFormats.PARAM+Row]::new($choices[0]);$pool.ID=[int]$alias.pool_id
+    [NreFull]::Set($pool,'attachEffectId',[int]$alias.effect_id)
+    $effects.table.Rows.Add($copy);$pools.table.Rows.Add($pool)
+    $effectMap[[int]$copy.ID]=$copy;$poolMap[[int]$pool.ID]=@($pool);$aliasCount++
+}
+if($aliasCount -eq 0){throw 'Missing duplicate alias plan'}
+$effects.file.Bytes=$effects.table.Write();$pools.file.Bytes=$pools.table.Write()
 $ant=Param $reg 'EquipParamAntique'
 $rowMap=@{};foreach($r in $ant.table.Rows){$rowMap[[int]$r.ID]=$r}
 foreach($product in $plan.initial_products){
@@ -99,6 +132,10 @@ if($layout.Count -ne 8){throw 'Missing runtime row guards'}
 [SoulsFormats.SFUtil]::EncryptNightreignRegulation($regPath,$reg,$reg.Compression)
 $round=[SoulsFormats.SFUtil]::DecryptNightreignRegulation($regPath)
 $rAnt=Param $round 'EquipParamAntique'
+foreach($name in 'AttachEffectParam','AttachEffectTableParam'){
+    $rt=Param $round $name;$expected=if($name -eq 'AttachEffectParam'){$effects}else{$pools}
+    if((Hash $rt.file.Bytes.ToArray()) -ne (Hash $expected.file.Bytes.ToArray())){throw 'Alias table roundtrip failed'}
+}
 if((Hash $rAnt.file.Bytes.ToArray()) -ne (Hash $ant.file.Bytes.ToArray())){throw 'Regulation roundtrip failed'}
 $talkPath=Join-Path $folder 'mod/script/talk/m10_00_00_00.talkesdbnd.dcx'
 $b=[SoulsFormats.BND4]::Read($talkPath)
@@ -192,6 +229,6 @@ foreach($language in 'zhocn','engus'){
     paramdef_sha256=(Get-FileHash -LiteralPath (Join-Path $lib 'Assets/PARAM/NR/Defs/EquipParamAntique.xml')).Hash} |
     ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $folder 'runtime-layout.json') -Encoding utf8
 [ordered]@{status='BUILD_PASS_RUNTIME_TEST_PENDING';states=@($plan.states).Count;texts=@($plan.texts).Count;
-    native_row_guards=8;visible_editors=2;colors=4;shop_mapping_and_price_verified=$true;native_filter_hierarchy=$true;native_work_values=4;esd_restore_verified=$true;resource_roundtrips_verified=$true;
+    duplicate_aliases=$aliasCount;alias_fields_verified=$true;native_row_guards=8;visible_editors=2;colors=4;shop_mapping_and_price_verified=$true;native_filter_hierarchy=$true;native_work_values=4;esd_restore_verified=$true;resource_roundtrips_verified=$true;
     original_game_modified=$false;game_verified=$false} |
     ConvertTo-Json | Set-Content -LiteralPath (Join-Path $folder 'full-build-report.json') -Encoding utf8

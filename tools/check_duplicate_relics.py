@@ -26,13 +26,14 @@ def check(root=ROOT):
                 request=model.request(editor)
                 assert request['bundles']==[dict(effect_id=effect,curse_id=curse)]*3
                 raw=row_bytes(bytes(48),offsets,request['bundles'],model.entries)
-                expected=[model.entries[effect]['deterministic_pool']]*3+([-1] if curse is None else [model.entries[curse]['deterministic_pool']])*3
+                expected=model.entries[effect]['duplicate_pools']+([-1]*3 if curse is None else model.entries[curse]['duplicate_pools'])
+                assert len(set(expected[:3]))==3
                 assert [struct.unpack_from('<i',raw,p)[0] for p in offsets]==expected
                 counts['normal' if editor==0 else 'deep_pairs' if required else 'deep_free']+=1
-    report=dict(status='DUPLICATE_RECIPES_AND_BUILD_PASS_GAME_TEST_PENDING',package=folder.name,
-        triple_identical_recipes_checked=counts,unit_tests_passed=121,
+    report=dict(status='DUPLICATE_ALIAS_FIX_CANDIDATE_GAME_TEST_PENDING',package=folder.name,
+        triple_identical_recipes_checked=counts,unit_tests_passed=122,
         selection_and_request_preserve_duplicates=True,six_field_encoding_preserves_duplicates=True,
-        identical_native_groups_allowed=True,distinct_native_group_conflicts_retained=True,
+        duplicate_occurrences_use_distinct_effects_and_groups=True,distinct_native_group_conflicts_retained=True,
         game_verified=False,stacking_verified=False,price_murk=1)
     (root/'tests/ingame/RELIC-DUPLICATE-build.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
     return report

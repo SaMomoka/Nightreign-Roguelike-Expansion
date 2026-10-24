@@ -26,11 +26,18 @@ from probe_relic_params import ReadOnlyGame
 def row_bytes(original,offsets,bundles,entries):
     if len(original)!=48 or offsets!=[16,20,24,32,36,40] or len(bundles)!=3:
         raise ValueError("Unverified native row layout")
-    values=[]
+    values=[];occurrences={}
     for polarity in ("effect_id","curse_id"):
         for b in bundles:
             effect=b[polarity]
-            value=-1 if effect is None else entries[effect]["deterministic_pool"]
+            if effect is None:
+                value=-1
+            else:
+                occurrence=occurrences.get(effect,0)
+                pools=entries[effect].get('duplicate_pools',[entries[effect]['deterministic_pool']])
+                if occurrence>=len(pools):raise ValueError('Duplicate alias definitions missing; rebuild package')
+                value=pools[occurrence]
+                occurrences[effect]=occurrence+1
             if type(value) is not int or (polarity=="effect_id" and value<0):
                 raise ValueError("Missing deterministic effect pool")
             values.append(value)

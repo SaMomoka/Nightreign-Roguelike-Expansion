@@ -34,7 +34,18 @@ def build(root=ROOT,shell=None):
     compact=dict(schema_version=1,source_sha256=SOURCE,entries=[
         {k:v for k,v in e.items() if k not in ("native_links","references","reference_labels","info")}
         for e in catalog["entries"]])
+    aliases=[]
+    selectable=sorted((e for e in compact['entries'] if e['selectable_modes']),key=lambda e:e['effect_id'])
+    for index,e in enumerate(selectable):
+        e['duplicate_pools']=[e['deterministic_pool']]
+        for occurrence in (1,2):
+            alias_id=1800000000+index*2+occurrence-1
+            aliases.append(dict(source_effect=e['effect_id'],source_pool=e['deterministic_pool'],
+                effect_id=alias_id,pool_id=alias_id,occurrence=occurrence))
+            e['duplicate_pools'].append(alias_id)
     plan=compile_menu(compact)
+    plan['duplicate_aliases']=aliases
+
     by_id={e["effect_id"]:e for e in compact["entries"]}
     plan["initial_products"]=[]
     for product in color_products(native):
@@ -69,6 +80,7 @@ def build(root=ROOT,shell=None):
         source_package=source.name,workbook_sha256=catalog["reference"]["sha256"],
         limitations=["Full runtime crafting and persistence require in-game verification.",
                      "Headless adapter updates only eight owned color-specific mod parameter rows and one owned work-value response.",
+                     "Duplicate slots use custom effect IDs and require this package to remain loaded; preservation and stacking need game testing.",
                      "Requires this package and its local adapter; no multiplayer verification."])
     (folder/"manifest.json").write_text(json.dumps(manifest,ensure_ascii=False,indent=2),encoding="utf-8")
     files=["generate.me3","play.me3","manifest.json","full-menu-plan.json","runtime-catalog.json",

@@ -34,5 +34,7 @@
   "allow_duplicate_positive_effects": true,
   "allow_duplicate_negative_effects": true,
   "duplicate_effect_stacking_verified": false,
-  "duplicate_effect_policy": "identical_ids_allowed_distinct_native_group_conflicts_retained"
+  "duplicate_effect_policy": "custom_occurrence_aliases_candidate",
+  "duplicate_effect_game_status": "previous_build_drops_duplicates_candidate_pending",
+  "duplicate_alias_requires_loaded_package": true
 }

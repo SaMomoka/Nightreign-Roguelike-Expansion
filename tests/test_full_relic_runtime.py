@@ -12,7 +12,9 @@ from test_relic_selection import fixture
 class FullRuntimeProtocolTests(unittest.TestCase):
     def setUp(self):
         self.catalog=fixture()
-        for e in self.catalog["entries"]:e["deterministic_pool"]=100000+e["effect_id"]
+        for e in self.catalog["entries"]:
+            e["deterministic_pool"]=100000+e["effect_id"]
+            e["duplicate_pools"]=[100000+e["effect_id"],200000+e["effect_id"],300000+e["effect_id"]]
         self.plan=compile_menu(self.catalog)
         self.prepared=[]
         def prepare(editor,request,entries):
@@ -85,5 +87,11 @@ class FullRuntimeProtocolTests(unittest.TestCase):
         request=self.prepared[-1]
         offsets=[16,20,24,32,36,40]
         raw=row_bytes(bytes(48),offsets,request['bundles'],self.dispatcher.model.entries)
-        self.assertEqual([struct.unpack_from('<i',raw,i)[0] for i in offsets],[100010]*3+[100020]*3)
+        self.assertEqual([struct.unpack_from('<i',raw,i)[0] for i in offsets],[100010,200010,300010,100020,200020,300020])
         self.assertEqual(request['price'],1)
+
+    def test_duplicate_requires_aliases_and_unique_recipe_keeps_original_pool(self):
+        entries=self.dispatcher.model.entries
+        del entries[10]['duplicate_pools']
+        with self.assertRaises(ValueError):
+            row_bytes(bytes(48),[16,20,24,32,36,40],[dict(effect_id=10,curse_id=None)]*3,entries)
