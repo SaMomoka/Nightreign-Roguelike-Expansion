@@ -1,9 +1,9 @@
 {
-  "status": "SECONDARY_MENU_REACHED_BUT_REWARDS_BUNDLED",
+  "status": "SINGLE_CHOICE_USER_TEST_PASSED",
   "tested_package": "training_buffs_20261024_170842_5e15db",
   "user_reply": "能领取，但点击数值强化后依旧是放背包中，且背包内物品无法交互",
   "observed": "Read-only screenshot: native bag assignment UI, owned token count 0",
-  "pending_package": "training_buffs_20261024_174144_a2b53e",
+  "pending_package": null,
   "auto_open_verified": false,
   "redemption_verified": false,
   "custom_effect_verified": false,
@@ -25,5 +25,11 @@
     "single_choice_award_verified": false,
     "auto_open_verified": null,
     "individual_numeric_accuracy_verified": false
+  },
+  "fourth_attempt": {
+    "package": "training_buffs_20261024_174144_a2b53e",
+    "user_reply": "好，这个i项目测试完成了",
+    "single_choice_test_passed": true,
+    "scope": "按上一轮生命/FP单项领取要求记录通过；无具体数值，未扩展至全部12项、联机、读档。"
   }
 }
