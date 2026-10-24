@@ -39,6 +39,14 @@ class TrainingBuffTests(unittest.TestCase):
         self.assertFalse(consumed_response(old,b(MAGIC+1,11,0,0)))
         self.assertFalse(consumed_response(old,b(MAGIC,999,0,0)))
         self.assertFalse(consumed_response(old,b(MAGIC,11,0,1)))
+    def test_drop_moves_carrier_to_player_before_spawning(self):
+        events=event_plan()
+        warp=next(i for i,e in enumerate(events) if (e['bank'],e['id'])==(2004,42))
+        drop=next(i for i,e in enumerate(events) if (e['bank'],e['id'])==(2004,37))
+        self.assertEqual(struct.unpack('<IB3xIiI',bytes.fromhex(events[warp]['hex'])),(10000980,2,10000,-1,10000))
+        self.assertLess(warp,drop)
+        self.assertEqual((events[warp+1]['bank'],events[warp+1]['id']),(1001,1))
+
     def test_event_targets_only_owned_carrier(self):
         events=event_plan();drop=[e for e in events if (e['bank'],e['id'])==(2004,37)]
         self.assertEqual(len(drop),1);self.assertEqual(struct.unpack('<I',bytes.fromhex(drop[0]['hex']))[0],10000980)
