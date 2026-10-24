@@ -3,7 +3,7 @@ $ErrorActionPreference='Stop'
 $root=(Resolve-Path $ProjectRoot).Path;$folder=(Resolve-Path $Package).Path
 if(-not $folder.StartsWith((Join-Path $root 'local/packages')+[IO.Path]::DirectorySeparatorChar)){throw 'Outside packages'}
 $plan=Get-Content (Join-Path $folder 'training-plan.json') -Raw | ConvertFrom-Json
-if($plan.request_flag -ne 10009880 -or $plan.entries.Count -ne 12){throw 'Invalid training plan'}
+if($plan.request_flag -ne 10009880 -or $plan.entries.Count -lt 12){throw 'Invalid training plan'}
 $lib=Join-Path $root 'local/tools/Smithbox-2.2.6';[Environment]::CurrentDirectory=$lib;Set-Location $lib
 foreach($dll in 'BouncyCastle.Cryptography.dll','ZstdNet.dll','Andre.SoulsFormats.dll'){[Reflection.Assembly]::LoadFrom((Join-Path $lib $dll)) | Out-Null}
 Add-Type -ReferencedAssemblies @((Join-Path $lib 'Andre.SoulsFormats.dll'),'System.Collections','System.Runtime','System.Linq') -TypeDefinition @'
@@ -30,14 +30,24 @@ function SetCell($r,$field,$value){[TrainingBuild]::Set($r,$field,$value)}
 $regPath=Join-Path $folder 'mod/regulation.bin';$reg=[SoulsFormats.SFUtil]::DecryptNightreignRegulation($regPath)
 if($reg.Version -ne '10350000'){throw 'Unsupported regulation'}
 $params=@{};foreach($n in 'EquipParamGoods','PermanentBuffParam','SpEffectParam','ItemTableParam','ItemLotParam_enemy','NpcParam'){$params[$n]=Param $reg $n}
+foreach($e in $plan.entries){if($e.goods_id -le 0 -or $e.goods_id -gt 0x00ffffff){throw 'Goods ID exceeds packed item payload'}}
 foreach($e in @($plan.entries | Where-Object custom)){
  $g=Clone $params.EquipParamGoods (One $params.EquipParamGoods $e.source_goods) $e.goods_id
  if([TrainingBuild]::Get($g,'goodsType') -ne 11 -or [TrainingBuild]::Get($g,'vagrantItemLotId') -ne $e.source_permanent){throw 'Unverified permanent buff path'}
  $p=Clone $params.PermanentBuffParam (One $params.PermanentBuffParam $e.source_permanent) $e.goods_id
  if([TrainingBuild]::Get($p,'spEffectId') -ne $e.source_effect){throw 'Unverified SpEffect path'}
  $s=Clone $params.SpEffectParam (One $params.SpEffectParam $e.source_effect) $e.goods_id
+ SetCell $s 'spEffectTextId_1' $e.goods_id
  SetCell $g 'vagrantItemLotId' $e.goods_id;SetCell $p 'spEffectId' $e.goods_id;SetCell $p 'numericValue' $e.numeric_value
  foreach($field in $e.fields.PSObject.Properties){SetCell $s $field.Name $field.Value}
+}
+foreach($e in $plan.entries){
+ $g=One $params.EquipParamGoods $e.goods_id
+ if([TrainingBuild]::Get($g,'goodsType') -ne 11){throw 'Candidate is not a permanent buff'}
+ $pb=One $params.PermanentBuffParam ([TrainingBuild]::Get($g,'vagrantItemLotId'))
+ $fx=One $params.SpEffectParam ([TrainingBuild]::Get($pb,'spEffectId'))
+ if($e.custom -and ([TrainingBuild]::Get($fx,'spEffectTextId_1') -ne $e.goods_id)){throw 'Custom text reference mismatch'}
+ if(-not $e.custom -and ([TrainingBuild]::Get($fx,'spEffectTextId_1') -ne $e.text_id -or [TrainingBuild]::Get($pb,'spEffectId') -ne $e.source_effect)){throw 'Native candidate differs from export'}
 }
 $srcPool=@($params.ItemTableParam.table.Rows | Where-Object {$_.ID -eq 4200100 -and [TrainingBuild]::Get($_,'itemId') -eq 8000000})
 if($srcPool.Count -ne 1 -or [TrainingBuild]::Get($srcPool[0],'itemCategory') -ne 1){throw 'Unverified goods pool'}
@@ -132,9 +142,18 @@ foreach($lang in 'zhocn','engus'){
  $f=@($msg.Files | Where-Object {$_.Name.EndsWith('\EventTextForTalk.fmg')})[0];$fm=[SoulsFormats.FMG]::Read($f.Bytes)
  foreach($t in $plan.texts){if(@($fm.Entries | Where-Object ID -eq $t.id).Count){throw 'Training text collision'};$fm.Entries.Add([SoulsFormats.FMG+Entry]::new($fm,[int]$t.id,[string]$t.text))};$f.Bytes=$fm.Write();$msg.Write($path)
  $path=Join-Path $folder "mod/msg/$lang/item_dlc01.msgbnd.dcx";$msg=[SoulsFormats.BND4]::Read($path)
- foreach($suffix in 'GoodsName.fmg','GoodsInfo.fmg','GoodsCaption.fmg'){
+ foreach($suffix in 'GoodsName.fmg','GoodsInfo.fmg','GoodsCaption.fmg','PermanentBuffName.fmg','PermanentBuffInfo.fmg','AttachEffectName.fmg','AttachEffectInfo.fmg'){
   $f=@($msg.Files | Where-Object {$_.Name.EndsWith('\'+$suffix)});if($f.Count -ne 1){throw "Missing $suffix"};$fm=[SoulsFormats.FMG]::Read($f[0].Bytes)
-  foreach($e in @($plan.entries | Where-Object custom)){if(@($fm.Entries | Where-Object ID -eq $e.goods_id).Count){throw 'Buff text collision'};$fm.Entries.Add([SoulsFormats.FMG+Entry]::new($fm,[int]$e.goods_id,[string]$e.name))};$f[0].Bytes=$fm.Write()
+  foreach($e in $plan.entries){if($e.goods_id -le 0 -or $e.goods_id -gt 0x00ffffff){throw 'Goods ID exceeds packed item payload'}}
+foreach($e in @($plan.entries | Where-Object custom)){if(@($fm.Entries | Where-Object ID -eq $e.goods_id).Count){throw 'Buff text collision'};$fm.Entries.Add([SoulsFormats.FMG+Entry]::new($fm,[int]$e.goods_id,[string]$e.name))};$f[0].Bytes=$fm.Write()
  };$msg.Write($path)
+ $verifyMsg=[SoulsFormats.BND4]::Read($path)
+ foreach($bank in 'PermanentBuffName.fmg','PermanentBuffInfo.fmg','AttachEffectName.fmg','AttachEffectInfo.fmg'){
+  $vfm=[SoulsFormats.FMG]::Read(($verifyMsg.Files | Where-Object {$_.Name.EndsWith('\'+$bank)}).Bytes)
+  foreach($e in @($plan.entries | Where-Object custom)){
+   $vt=@($vfm.Entries | Where-Object ID -eq $e.goods_id)
+   if($vt.Count -ne 1 -or $vt[0].Text -ne $e.name){throw 'Custom buff text roundtrip mismatch'}
+  }
+ }
 }
-@{status='BUILD_PASS_GAME_TEST_PENDING';spawn_position=@($spawnX,$spawnY,$spawnZ);spawn_reference_entities=@(10000404,10000405);custom_buffs=6;native_controls=6;owned_pool_rows=3;original_params_preserved=$true;original_map_preserved=$true;original_events_preserved=$true;original_training_preserved=$true;game_verified=$false;drop_command='2004[37] Force Character Treasure: training reward path requires game test'} | ConvertTo-Json | Set-Content (Join-Path $folder 'training-build-report.json') -Encoding utf8
+@{status='BUILD_PASS_GAME_TEST_PENDING';spawn_position=@($spawnX,$spawnY,$spawnZ);spawn_reference_entities=@(10000404,10000405);custom_buffs=6;native_controls=@($plan.entries | Where-Object {-not $_.custom}).Count;owned_pool_rows=3;original_params_preserved=$true;original_map_preserved=$true;original_events_preserved=$true;original_training_preserved=$true;game_verified=$false;drop_command='2004[37] Force Character Treasure: training reward path requires game test'} | ConvertTo-Json | Set-Content (Join-Path $folder 'training-build-report.json') -Encoding utf8

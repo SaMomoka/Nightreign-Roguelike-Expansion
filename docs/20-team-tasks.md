@@ -48,3 +48,6 @@
 ## 2026-10-24 训练场潜在能力测试入口
 
 用户已授权开始下一功能。当前 Codex 认领 codex/training-buff-selector，基准本地 e75e431 / 远端 977997b。范围：新增训练场原生菜单、三个自选候选池、六项新数值 Buff 和六项原生对照、隔离包及验证。原小壶功能保留。构建及 129 项测试通过；训练场掉落实机待验收。设计、参数范围、构建依赖和未验证项见 docs/22-training-buff-selector.md。朋友暂勿同时修改训练场脚本和本分支新增资源分配。
+
+
+训练场后续交接：用户确认空地落点和原生领取生效，自定义项空白且无效。当前分支修正自定义物品编号、SpEffect 专用文字引用，并将原生候选扩至 63 条分类菜单；132 项测试及构建通过，修正版实机待验。新增 tools/training_buff_catalog.py、tools/export_training_text.ps1。详见 docs/22-training-buff-selector.md，勿将早期构建通过视为自定义效果通过。

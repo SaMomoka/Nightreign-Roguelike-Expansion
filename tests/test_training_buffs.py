@@ -13,6 +13,29 @@ class TrainingBuffTests(unittest.TestCase):
         self.assertEqual(len(set(e['goods_id'] for e in self.entries)),12)
         for slot in range(3):
             self.assertEqual(sum(s['name'].startswith(f'select{slot}_') and not s['name'].endswith('_ack') for s in p['states']),12)
+    def test_packed_goods_id_regression(self):
+        # Previous IDs were accepted by PARAM serialization but lost item identity.
+        bad=[dict(e) for e in self.entries];bad[0]['goods_id']=1900630000
+        with self.assertRaises(ValueError):compile_menu(bad)
+        with self.assertRaises(ValueError):encode_pool(bytes(36),8,1900630000,{1900630000})
+        for e in self.entries:self.assertEqual(e['goods_id'] & 0x00ffffff,e['goods_id'])
+
+    def test_large_catalog_reachable_from_all_slots(self):
+        entries=[dict(index=i,goods_id=9000000+i,name=f'Candidate {i}',category=f'Group {i//20}',custom=False) for i in range(69)]
+        plan=compile_menu(entries);audit(plan)
+        graph={s['id']:s for s in plan['states']};seen=set();todo=[plan['root_state']]
+        while todo:
+            n=todo.pop()
+            if n==2 or n in seen:continue
+            seen.add(n);todo.extend(c['target'] for c in graph[n]['conditions'])
+        for slot in range(3):
+            picks=[s for s in plan['states'] if s['name'].startswith(f'select{slot}_') and not s['name'].endswith('_ack')]
+            self.assertEqual(len(picks),69)
+            self.assertTrue(all(s['id'] in seen for s in picks))
+        self.assertEqual(len(plan['labels']),207)
+        self.assertEqual(struct.unpack_from('<i',encode_pool(bytes(36),8,9000068,{e['goods_id'] for e in entries}),8)[0],9000068)
+        with self.assertRaises(ValueError):encode_pool(bytes(36),8,9000069,{e['goods_id'] for e in entries})
+
     def test_original_settings_and_exit_retained(self):
         p=compile_menu(self.entries)
         self.assertEqual(next(x for x in p['states'] if x['name']=='original')['template'],'original')

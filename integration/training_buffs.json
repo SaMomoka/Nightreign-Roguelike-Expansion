@@ -1,7 +1,7 @@
 {
-  "status": "SPAWN_CONFIRMED_POSITION_FIX_PENDING",
+  "status": "NATIVE_PICKUP_PASS_CUSTOM_BUFF_FAILED_FIX_PENDING",
   "custom_numeric_buffs": 6,
-  "native_controls": 6,
+  "native_controls": 63,
   "selector_slots": 3,
   "training_menu": true,
   "boss_drop_integration": false,
@@ -10,6 +10,8 @@
   "documentation": "docs/22-training-buff-selector.md",
   "evidence": "tests/ingame/TRAINING-BUFF-build.json",
   "menu_and_generation_user_confirmed": true,
-  "accessible_drop_verified": false,
-  "ingame_evidence": "tests/ingame/TRAINING-BUFF-ingame.json"
+  "accessible_drop_verified": true,
+  "ingame_evidence": "tests/ingame/TRAINING-BUFF-ingame.json",
+  "native_buff_effect_verified": true,
+  "custom_buff_effect_verified": false
 }

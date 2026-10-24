@@ -10,12 +10,12 @@ from relic_launch import verify_package,sha
 from training_buff_menu import MAGIC,MARKERS,POOL_IDS,encode_pool
 
 class TrainingGame(ReadOnlyGame):
-    def __init__(self,pid,exe,layout):
+    def __init__(self,pid,exe,layout,allowed):
         super().__init__(pid,exe);self.close()
         self.handle=self.k.OpenProcess(0x438,False,pid)
         if not self.handle:raise ctypes.WinError(ctypes.get_last_error())
         self.k.WriteProcessMemory.argtypes=[W.HANDLE,ctypes.c_void_p,ctypes.c_void_p,ctypes.c_size_t,ctypes.POINTER(ctypes.c_size_t)]
-        self.layout={x['id']:x for x in layout};self.addresses={};self.last={};self.mailbox=None
+        self.allowed=frozenset(allowed);self.layout={x['id']:x for x in layout};self.addresses={};self.last={};self.mailbox=None
         if set(self.layout)!=set(POOL_IDS):raise ValueError('Wrong owned pools')
     def write(self,address,old,new,mailbox_snapshot=None):
         response=address==self.mailbox+12 and len(new)==4
@@ -39,7 +39,7 @@ class TrainingGame(ReadOnlyGame):
         for i,g in zip(POOL_IDS,goods):
             r=self.layout[i];old=self.read(self.addresses[i],36);original=bytes.fromhex(r['initial_hex'])
             if old not in (original,self.last.get(i)):raise ValueError('Training pool modified elsewhere')
-            changes.append((i,old,encode_pool(original,r['item_offset'],g)))
+            changes.append((i,old,encode_pool(original,r['item_offset'],g,self.allowed)))
         for i,old,new in changes:self.write(self.addresses[i],old,new);self.last[i]=new
 
     def training_param(self):
@@ -82,7 +82,7 @@ def run(root,folder,launched_after):
     while not game_pid() and time.monotonic()<deadline:time.sleep(1)
     pid=game_pid()
     if not pid:raise ValueError('Game did not start')
-    exe=Path(load(root/'local/runtime.json')['game'])/'nightreign.exe';game=TrainingGame(pid,exe,layout)
+    exe=Path(load(root/'local/runtime.json')['game'])/'nightreign.exe';game=TrainingGame(pid,exe,layout,[e['goods_id'] for e in plan['entries']])
     try:
         if created_at(game)<launched_after-2:raise ValueError('Game predates launch')
         log=folder/'generate-launch.log'
@@ -105,7 +105,7 @@ def run(root,folder,launched_after):
             elif v[0]==MAGIC and v[3]==0 and v[1]!=0:
                 op,payload=v[1:3];reply=-1
                 if op in (10,11,12):reply=plan['labels'][f'{op-10}:{selected[op-10]}']
-                elif op in (100,101,102) and 0<=payload<12:selected[op-100]=payload;reply=1
+                elif op in (100,101,102) and 0<=payload<len(plan['entries']):selected[op-100]=payload;reply=1
                 elif op==200:
                     goods=[plan['entries'][i]['goods_id'] for i in selected]
                     game.prepare(goods);reply=1

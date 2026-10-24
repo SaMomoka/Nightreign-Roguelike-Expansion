@@ -9,21 +9,23 @@ STATE_BASE=600000
 TEXT_BASE=1900600000
 POOL_IDS=(1900610000,1900610001,1900610002)
 
-def catalog(native):
+def catalog(native, full_native=None):
     result=[]
     rates=(1.05,1.05,1.05,1.03,0.96,0.96)
     names=('生命上限 +5%','FP 上限 +5%','精力上限 +5%','物理攻击 +3%','物理承伤 -4%','属性承伤 -4%')
     for i,b in enumerate(native['buffs']):
-        result.append(dict(index=i,name='NRE '+names[i],goods_id=1900630000+i,
+        result.append(dict(index=i,name='NRE '+names[i],goods_id=8900000+i,category="NRE 数值实验",
             source_goods=b['goods_id'],source_permanent=b['permanent_buff_id'],source_effect=b['sp_effect_id'],
             fields={k:rates[i] for k in b['effect_fields']},numeric_value=(5,5,5,3,4,4)[i],custom=True))
-    for i,b in enumerate(native['buffs']):
-        result.append(dict(index=6+i,name='原生对照：'+b['name'],goods_id=b['goods_id'],custom=False))
+    for b in (full_native if full_native is not None else native['buffs']):
+        result.append(dict(b,index=len(result),name=b['name'],goods_id=b['goods_id'],custom=False,category=b.get('category','原生对照')))
     return result
 
 def compile_menu(entries):
-    if len(entries)!=12 or [e['index'] for e in entries]!=list(range(12)):
-        raise ValueError('Expected reviewed six custom and six native buffs')
+    if not entries or [e['index'] for e in entries]!=list(range(len(entries))):
+        raise ValueError('Invalid candidate indexes')
+    if len({e['goods_id'] for e in entries})!=len(entries) or any(not 0<e['goods_id']<=0x00ffffff for e in entries):
+        raise ValueError('Invalid or repeated packed goods ID')
     texts=[];nodes={};labels={}
     def text(s):
         i=TEXT_BASE+len(texts);texts.append(dict(id=i,text=s));return i
@@ -58,12 +60,19 @@ def compile_menu(entries):
     node('editor_clear',template='clear',conditions=[go('refresh0')])
     node('editor_tail',entry=[cmd(149,4,text('生成潜在能力'),-1,4,0),cmd(149,5,text('返回'),-1,5,0)],conditions=[go('editor_wait')])
     node('editor_wait',template='show',conditions=[go('editor_dispatch'),go('root')],modal=True)
-    node('editor_dispatch',conditions=[eq(integer(23)+b'\x84',s+1,f'pick{s}_0') for s in range(3)]+[eq(integer(23)+b'\x84',4,'spawn'),go('root')])
+    node('editor_dispatch',conditions=[eq(integer(23)+b'\x84',s+1,f'categories{s}') for s in range(3)]+[eq(integer(23)+b'\x84',4,'spawn'),go('root')])
     for s in range(3):
-        for p in range(2):
-            items=[(text(e['name']),f'select{s}_{e["index"]}') for e in entries[p*6:p*6+6]]
-            items+=[(text('原生对照 →' if p==0 else '← 新增 Buff'),f'pick{s}_{1-p}'),(text('返回'),'editor_clear')]
-            page(f'pick{s}_{p}',items,'editor_clear')
+        categories=list(dict.fromkeys(e['category'] for e in entries))
+        page(f'categories{s}',[(text(c),f'pick{s}_{ci}_0') for ci,c in enumerate(categories)]+[(text('返回'),'editor_clear')],'editor_clear')
+        for ci,c in enumerate(categories):
+            group=[e for e in entries if e['category']==c]
+            count=(len(group)+5)//6
+            for page_index in range(count):
+                items=[(text(e['name']),f'select{s}_{e["index"]}') for e in group[page_index*6:page_index*6+6]]
+                if page_index>0:items.append((text('上一页'),f'pick{s}_{ci}_{page_index-1}'))
+                if page_index+1<count:items.append((text('下一页'),f'pick{s}_{ci}_{page_index+1}'))
+                items.append((text('返回分类'),f'categories{s}'))
+                page(f'pick{s}_{ci}_{page_index}',items,f'categories{s}')
         for e in entries:request(f'select{s}_{e["index"]}',100+s,e['index'],'editor_clear')
     request('spawn',200,0,'trigger')
     node('trigger',entry=[cmd(11,FLAG,1)],conditions=[go('exit')])
@@ -74,7 +83,7 @@ def compile_menu(entries):
         for c in v['conditions']:c['target']=ids.get(c['target'],c['target'])
     return dict(states=list(nodes.values()),texts=texts,labels=labels,root_state=ids['root'],state_first=STATE_BASE,state_end=STATE_BASE+len(nodes),entries=entries,pool_ids=POOL_IDS,request_flag=FLAG,spawn_reference_entities=[10000404,10000405])
 
-def encode_pool(original,offset,goods):
-    if len(original)!=36 or offset!=8 or goods not in (*range(1900630000,1900630006),8000000,8010000,8020000,8100000,8200000,8200500):
+def encode_pool(original,offset,goods,allowed=None):
+    if len(original)!=36 or offset!=8 or not 0<goods<=0x00ffffff or goods not in (allowed if allowed is not None else (*range(8900000,8900006),8000000,8010000,8020000,8100000,8200000,8200500)):
         raise ValueError('Unapproved training pool or good')
     data=bytearray(original);struct.pack_into('<i',data,offset,goods);return bytes(data)

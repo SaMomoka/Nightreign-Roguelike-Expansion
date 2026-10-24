@@ -1,22 +1,8 @@
 {
+  "native_controls": 63,
   "owned_pool_rows": 3,
   "status": "BUILD_PASS_GAME_TEST_PENDING",
-  "custom_buffs": 6,
-  "original_events_preserved": true,
   "game_verified": false,
-  "native_controls": 6,
-  "original_map_preserved": true,
-  "original_params_preserved": true,
-  "original_training_preserved": true,
-  "drop_command": "2004[37] Force Character Treasure: training reward path requires game test",
-  "package": "training_buffs_20261024_163559_c2fe0f",
-  "unit_tests_passed": 130,
-  "selector_slots": 3,
-  "entry_scripts": [
-    "t607001000.esd",
-    "t609001000.esd"
-  ],
-  "entry_user_feedback": "Training chest menu and drop generation confirmed; previous fixed drop was inaccessible",
   "spawn_position": [
     38.53150177001953,
     10.123000144958496,
@@ -25,5 +11,28 @@
   "spawn_reference_entities": [
     10000404,
     10000405
-  ]
+  ],
+  "original_map_preserved": true,
+  "original_events_preserved": true,
+  "custom_buffs": 6,
+  "original_params_preserved": true,
+  "drop_command": "2004[37] Force Character Treasure: training reward path requires game test",
+  "original_training_preserved": true,
+  "package": "training_buffs_20261024_164953_7c4972",
+  "unit_tests_passed": 132,
+  "selector_slots": 3,
+  "entry_scripts": [
+    "t607001000.esd",
+    "t609001000.esd"
+  ],
+  "custom_goods_ids": [
+    8900000,
+    8900001,
+    8900002,
+    8900003,
+    8900004,
+    8900005
+  ],
+  "custom_text_reference_checked": true,
+  "custom_text_roundtrip_checked": true
 }

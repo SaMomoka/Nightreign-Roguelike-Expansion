@@ -5,6 +5,7 @@ from pathlib import Path
 from relic_presets import ROOT,load
 from relic_launch import verify_package,sha,launch
 from training_buff_menu import compile_menu,catalog,FLAG
+from training_buff_catalog import build_catalog
 
 def event_plan():
     def instr(bank,op,fmt,*args):return dict(bank=bank,id=op,hex=struct.pack(fmt,*args).hex())
@@ -35,7 +36,9 @@ def build(root,shell):
     folder=root/'local/packages'/('training_buffs_'+datetime.now().strftime('%Y%m%d_%H%M%S')+'_'+uuid.uuid4().hex[:6]);folder.mkdir()
     for relative in meta['sha256']:
         p=folder/relative;p.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(source/relative,p)
-    plan=compile_menu(catalog(load(root/'data/phase1_native_buffs.json')))
+    native_catalog=build_catalog(root)
+    plan=compile_menu(catalog(load(root/'data/phase1_native_buffs.json'),native_catalog['entries']))
+    plan['catalog_audit']=native_catalog['audit']
     plan.update(event_instructions=event_plan(),event_init=struct.pack('<iII',0,FLAG,0).hex(),audit=audit(plan))
     (folder/'training-plan.json').write_text(json.dumps(plan,ensure_ascii=False,indent=2),encoding='utf-8')
     result=subprocess.run([shell,'-NoProfile','-File',str(root/'tools/build_training_buffs.ps1'),'-Package',str(folder),'-ProjectRoot',str(root)],capture_output=True,text=True,encoding='utf-8',errors='replace',creationflags=getattr(subprocess,'CREATE_NO_WINDOW',0))
