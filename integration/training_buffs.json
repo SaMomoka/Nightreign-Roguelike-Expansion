@@ -1,0 +1,12 @@
+{
+  "status": "BUILD_PASS_GAME_TEST_PENDING",
+  "custom_numeric_buffs": 6,
+  "native_controls": 6,
+  "selector_slots": 3,
+  "training_menu": true,
+  "boss_drop_integration": false,
+  "game_verified": false,
+  "multiplayer_verified": false,
+  "documentation": "docs/22-training-buff-selector.md",
+  "evidence": "tests/ingame/TRAINING-BUFF-build.json"
+}

@@ -1,0 +1,20 @@
+{
+  "owned_pool_rows": 3,
+  "status": "BUILD_PASS_GAME_TEST_PENDING",
+  "custom_buffs": 6,
+  "original_events_preserved": true,
+  "game_verified": false,
+  "native_controls": 6,
+  "original_map_preserved": true,
+  "original_params_preserved": true,
+  "original_training_preserved": true,
+  "drop_command": "2004[37] Force Character Treasure: training reward path requires game test",
+  "package": "training_buffs_20261024_162619_3c8dae",
+  "unit_tests_passed": 129,
+  "selector_slots": 3,
+  "entry_scripts": [
+    "t607001000.esd",
+    "t609001000.esd"
+  ],
+  "entry_user_feedback": "User can open training equipment; revised chest entry pending game check"
+}
