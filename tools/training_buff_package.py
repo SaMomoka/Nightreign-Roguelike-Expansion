@@ -51,7 +51,7 @@ def build(root,shell):
     manifest['limitations']+=['Training drop generation, repeat generation and buff cleanup require game testing.','Training selector does not change expedition boss rewards.']
     (folder/'manifest.json').write_text(json.dumps(manifest,indent=2),encoding='utf-8')
     files=set(meta['sha256'])|{'training-plan.json','training-layout.json','training-build-report.json','mod/map/mapstudio/m10_00_00_00.msb.dcx','mod/event/m10_00_00_00.emevd.dcx'}
-    meta.update(savefile=save,training_extension=True,sha256={n:sha(folder/n) for n in sorted(files)},training_tool_hashes={n:sha(root/'tools'/n) for n in ('training_buff_menu.py','training_buff_runtime.py')})
+    meta.update(savefile=save,training_extension=True,sha256={n:sha(folder/n) for n in sorted(files)},training_tool_hashes={n:sha(root/'tools'/n) for n in ('training_buff_menu.py','training_buff_runtime.py','numeric_reward.py')})
     (folder/'package.json').write_text(json.dumps(meta,indent=2),encoding='utf-8');verify_package(folder,root)
     (root/'local/training-package.json').write_text(json.dumps(dict(path=str(folder)),ensure_ascii=False),encoding='utf-8')
     return folder

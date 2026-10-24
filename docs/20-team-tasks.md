@@ -51,3 +51,6 @@
 
 
 训练场后续交接：用户确认空地落点和原生领取生效，自定义项空白且无效。当前分支修正自定义物品编号、SpEffect 专用文字引用，并将原生候选扩至 63 条分类菜单；132 项测试及构建通过，修正版实机待验。新增 tools/training_buff_catalog.py、tools/export_training_text.ps1。详见 docs/22-training-buff-selector.md，勿将早期构建通过视为自定义效果通过。
+
+
+认领数值强化二级选择：codex/numeric-reward-choice，基准本地 9d2a7d8 / 远端 ed03156。用户确认选中三选一的数值强化卡后，再任选一项具体加成。范围为训练菜单、原创数值定义、原生物品领取事件；速度参数仍需实证，未接入正式远征。

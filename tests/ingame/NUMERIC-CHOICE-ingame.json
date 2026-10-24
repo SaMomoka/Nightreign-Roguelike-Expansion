@@ -1,0 +1,11 @@
+{
+  "status": "TOKEN_INVENTORY_FLOW_FAILED_FIX_PENDING",
+  "tested_package": "training_buffs_20261024_170842_5e15db",
+  "user_reply": "能领取，但点击数值强化后依旧是放背包中，且背包内物品无法交互",
+  "observed": "Read-only screenshot: native bag assignment UI, owned token count 0",
+  "pending_package": "training_buffs_20261024_171619_4d8dc6",
+  "auto_open_verified": false,
+  "redemption_verified": false,
+  "custom_effect_verified": false,
+  "correction": "Clone native key-item type 2 instead of consumable type 0; own ID remains 8900999"
+}

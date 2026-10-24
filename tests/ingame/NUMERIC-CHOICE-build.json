@@ -1,0 +1,13 @@
+{
+  "status": "BUILD_PASS_GAME_TEST_PENDING",
+  "package": "training_buffs_20261024_171619_4d8dc6",
+  "unit_tests_passed": 137,
+  "numeric_entries": 12,
+  "native_entries": 63,
+  "nested_choice_game_verified": false,
+  "custom_effect_game_verified": false,
+  "speed_implemented": false,
+  "expedition_integrated": false,
+  "token_goods_type": 2,
+  "previous_candidate_failed": true
+}
