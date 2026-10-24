@@ -1,0 +1,388 @@
+{
+  "status": "PARAMETER_REFERENCE_GRAPH_ONLY",
+  "element_codes": {
+    "1": "magic",
+    "2": "fire",
+    "3": "lightning",
+    "4": "holy"
+  },
+  "ordered_combinations": 64,
+  "spell_count": 14,
+  "native_enemy_residue_storage": null,
+  "native_hit_owner_api": null,
+  "native_weapon_instance_binding": null,
+  "game_verified": false,
+  "regulation_sha256": "876A3CA279A4561D0C69F81FE5E510C75C59AB9A8A201694F8CF4A42C91E0268",
+  "regulation_version": "10350000",
+  "templates": [
+    {
+      "magic_id": 8000,
+      "element_sets": [
+        [
+          2
+        ]
+      ],
+      "roots": [
+        {
+          "table": "Bullet",
+          "id": 10800000
+        }
+      ],
+      "bullet_count": 4,
+      "attack_ids": [
+        80000,
+        80002,
+        690000000,
+        690000001
+      ],
+      "hit_effect_ids": [],
+      "unresolved_roots": []
+    },
+    {
+      "magic_id": 8001,
+      "element_sets": [
+        [
+          1
+        ]
+      ],
+      "roots": [
+        {
+          "table": "Bullet",
+          "id": 10800100
+        }
+      ],
+      "bullet_count": 9,
+      "attack_ids": [
+        80100,
+        80101,
+        690000000
+      ],
+      "hit_effect_ids": [],
+      "unresolved_roots": []
+    },
+    {
+      "magic_id": 8002,
+      "element_sets": [
+        [
+          3
+        ]
+      ],
+      "roots": [
+        {
+          "table": "Bullet",
+          "id": 10800200
+        },
+        {
+          "table": "SpEffectParam",
+          "id": 1800200
+        }
+      ],
+      "bullet_count": 9,
+      "attack_ids": [
+        80200,
+        80201,
+        690000000,
+        690000001
+      ],
+      "hit_effect_ids": [],
+      "unresolved_roots": []
+    },
+    {
+      "magic_id": 8003,
+      "element_sets": [
+        [
+          4
+        ]
+      ],
+      "roots": [
+        {
+          "table": "SpEffectParam",
+          "id": 1800300
+        }
+      ],
+      "bullet_count": 0,
+      "attack_ids": [],
+      "hit_effect_ids": [],
+      "unresolved_roots": [
+        {
+          "table": "Bullet",
+          "id": 10800300,
+          "slot": 1
+        }
+      ]
+    },
+    {
+      "magic_id": 8010,
+      "element_sets": [
+        [
+          1,
+          2
+        ]
+      ],
+      "roots": [
+        {
+          "table": "Bullet",
+          "id": 10801000
+        },
+        {
+          "table": "Bullet",
+          "id": 10801017
+        }
+      ],
+      "bullet_count": 18,
+      "attack_ids": [
+        81000,
+        81005,
+        690000000,
+        690000001
+      ],
+      "hit_effect_ids": [],
+      "unresolved_roots": []
+    },
+    {
+      "magic_id": 8011,
+      "element_sets": [
+        [
+          2,
+          3
+        ]
+      ],
+      "roots": [
+        {
+          "table": "Bullet",
+          "id": 10801100
+        }
+      ],
+      "bullet_count": 1,
+      "attack_ids": [
+        81100
+      ],
+      "hit_effect_ids": [],
+      "unresolved_roots": []
+    },
+    {
+      "magic_id": 8012,
+      "element_sets": [
+        [
+          2,
+          4
+        ]
+      ],
+      "roots": [
+        {
+          "table": "Bullet",
+          "id": 10801200
+        },
+        {
+          "table": "Bullet",
+          "id": 10801201
+        },
+        {
+          "table": "Bullet",
+          "id": 10801202
+        }
+      ],
+      "bullet_count": 3,
+      "attack_ids": [
+        81200,
+        81201
+      ],
+      "hit_effect_ids": [
+        1801200,
+        1801210,
+        1801215,
+        1801220,
+        1801225,
+        1801230,
+        1801235,
+        1801240,
+        1801245,
+        1801250
+      ],
+      "unresolved_roots": []
+    },
+    {
+      "magic_id": 8013,
+      "element_sets": [
+        [
+          1,
+          3
+        ]
+      ],
+      "roots": [
+        {
+          "table": "Bullet",
+          "id": 10801300
+        }
+      ],
+      "bullet_count": 2,
+      "attack_ids": [
+        81300
+      ],
+      "hit_effect_ids": [],
+      "unresolved_roots": []
+    },
+    {
+      "magic_id": 8014,
+      "element_sets": [
+        [
+          1,
+          4
+        ]
+      ],
+      "roots": [
+        {
+          "table": "Bullet",
+          "id": 10801400
+        }
+      ],
+      "bullet_count": 1,
+      "attack_ids": [
+        81400
+      ],
+      "hit_effect_ids": [
+        1801400
+      ],
+      "unresolved_roots": []
+    },
+    {
+      "magic_id": 8015,
+      "element_sets": [
+        [
+          3,
+          4
+        ]
+      ],
+      "roots": [
+        {
+          "table": "Bullet",
+          "id": 10801500
+        },
+        {
+          "table": "SpEffectParam",
+          "id": 1801500
+        }
+      ],
+      "bullet_count": 1,
+      "attack_ids": [
+        81510
+      ],
+      "hit_effect_ids": [],
+      "unresolved_roots": []
+    },
+    {
+      "magic_id": 8020,
+      "element_sets": [
+        [
+          1,
+          2,
+          3
+        ]
+      ],
+      "roots": [
+        {
+          "table": "Bullet",
+          "id": 10802000
+        }
+      ],
+      "bullet_count": 9,
+      "attack_ids": [
+        82000,
+        82010,
+        82011,
+        82012,
+        690000000,
+        690000001
+      ],
+      "hit_effect_ids": [
+        470
+      ],
+      "unresolved_roots": []
+    },
+    {
+      "magic_id": 8021,
+      "element_sets": [
+        [
+          1,
+          2,
+          4
+        ]
+      ],
+      "roots": [
+        {
+          "table": "Bullet",
+          "id": 10802100
+        },
+        {
+          "table": "Bullet",
+          "id": 10802101
+        }
+      ],
+      "bullet_count": 2,
+      "attack_ids": [
+        82100,
+        82111
+      ],
+      "hit_effect_ids": [
+        1802111,
+        1802121
+      ],
+      "unresolved_roots": []
+    },
+    {
+      "magic_id": 8022,
+      "element_sets": [
+        [
+          2,
+          3,
+          4
+        ]
+      ],
+      "roots": [
+        {
+          "table": "Bullet",
+          "id": 10802200
+        }
+      ],
+      "bullet_count": 20,
+      "attack_ids": [
+        82200,
+        82201,
+        82210,
+        690000000,
+        690000001
+      ],
+      "hit_effect_ids": [],
+      "unresolved_roots": []
+    },
+    {
+      "magic_id": 8023,
+      "element_sets": [
+        [
+          1,
+          3,
+          4
+        ]
+      ],
+      "roots": [
+        {
+          "table": "Bullet",
+          "id": 10802300
+        },
+        {
+          "table": "Bullet",
+          "id": 10802301
+        }
+      ],
+      "bullet_count": 2,
+      "attack_ids": [
+        82300,
+        82310
+      ],
+      "hit_effect_ids": [
+        1802301
+      ],
+      "unresolved_roots": []
+    }
+  ]
+}
