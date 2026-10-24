@@ -73,3 +73,17 @@ class FullRuntimeProtocolTests(unittest.TestCase):
     def test_layout_or_pool_uncertainty_rejects_preparation(self):
         with self.assertRaises(ValueError):row_bytes(bytes(48),[0,4,8,12,16,20],[],{})
         with self.assertRaises(ValueError):self.dispatcher.dispatch(999,0)
+
+    def test_duplicate_recipe_reaches_native_row_writer_without_deduplication(self):
+        self.dispatcher.model.entries[10].update(compatibility_id=7,exclusivity_id=9)
+        self.dispatcher.model.entries[20].update(compatibility_id=8,exclusivity_id=10)
+        for slot in range(3):
+            self.assertEqual(self.dispatcher.dispatch(206+slot,10),2)
+            self.assertEqual(self.dispatcher.dispatch(306+slot,20),1)
+        self.dispatcher.dispatch(602,1)
+        self.assertEqual(self.dispatcher.dispatch(502,0),SHOP_BASE+5)
+        request=self.prepared[-1]
+        offsets=[16,20,24,32,36,40]
+        raw=row_bytes(bytes(48),offsets,request['bundles'],self.dispatcher.model.entries)
+        self.assertEqual([struct.unpack_from('<i',raw,i)[0] for i in offsets],[100010]*3+[100020]*3)
+        self.assertEqual(request['price'],1)

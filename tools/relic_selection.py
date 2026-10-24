@@ -72,10 +72,10 @@ class RelicSelection:
         self.prepared = None
 
     def _compatible(self, values):
-        """Retain the project's conservative native group policy."""
+        """Allow repeated identical IDs; retain conflicts between distinct effects."""
         for field in ("compatibility_id","exclusivity_id"):
             seen=set()
-            for value in values:
+            for value in set(values):
                 if value is None:continue
                 group=self.entries[value].get(field,-1)
                 if group>=0:
@@ -90,8 +90,6 @@ class RelicSelection:
         self._position(editor, slot)
         if effect_id not in self.candidates(editor):
             raise ValueError("Effect is not a selectable positive relic effect")
-        if any(b["effect_id"] == effect_id for i, b in enumerate(self.drafts[editor]) if i != slot):
-            raise ValueError("Duplicate positive effect")
         self._compatible(self._others(editor,slot)+[effect_id])
         entry = self.entries[effect_id]
         self._changed()
@@ -111,8 +109,6 @@ class RelicSelection:
         editor, slot = pending["editor"], pending["slot"]
         if negative_id not in self.candidates(editor, negative=True):
             raise ValueError("Invalid negative relic effect")
-        if any(b["curse_id"] == negative_id for i, b in enumerate(self.drafts[editor]) if i != slot):
-            raise ValueError("Duplicate negative effect")
         self._compatible(self._others(editor,slot)+[pending["effect_id"],negative_id])
         self.drafts[editor][slot] = dict(effect_id=pending["effect_id"], curse_id=negative_id)
         self.pending = None

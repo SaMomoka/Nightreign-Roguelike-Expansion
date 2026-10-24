@@ -23,3 +23,5 @@
 ## 2026-10-24 小壶改版交接
 
 用户已指派当前 Codex 任务完成两类入口、颜色选择和原生词条分类。分支 `codex/relic-colors-filters`，远端基准 `6614594`，本地基准 `a03ce3f`。源码、构建与自动检查已完成，新游戏内 UI 实测待验收。修改范围及后续风险见 [改版说明](21-relic-filter-colors.md)，检查结果见 `tests/ingame/RELIC-FILTER-COLOR-build.json`。朋友的任务尚未自动指派。
+
+追加需求：当前 Codex 已接手允许相同遗物词条重复选择，基准本地 07cfb8e、远端分支 9cb05c8。范围为全量选择校验与测试；深夜负面同步允许重复。详见 docs/21-relic-filter-colors.md 的追加记录，实机叠加效果未确认。

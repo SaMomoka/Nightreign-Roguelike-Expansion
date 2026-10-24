@@ -30,5 +30,9 @@
   ],
   "filter_source": "native_attach_effect_filter_hierarchy",
   "native_filter_panel_reused": false,
-  "full_catalog_build_evidence": "tests/ingame/RELIC-FILTER-COLOR-build.json"
+  "full_catalog_build_evidence": "tests/ingame/RELIC-FILTER-COLOR-build.json",
+  "allow_duplicate_positive_effects": true,
+  "allow_duplicate_negative_effects": true,
+  "duplicate_effect_stacking_verified": false,
+  "duplicate_effect_policy": "identical_ids_allowed_distinct_native_group_conflicts_retained"
 }

@@ -1,0 +1,17 @@
+{
+  "status": "DUPLICATE_RECIPES_AND_BUILD_PASS_GAME_TEST_PENDING",
+  "package": "full_relic_20261024_154338_42f7da",
+  "triple_identical_recipes_checked": {
+    "normal": 406,
+    "deep_free": 277,
+    "deep_pairs": 1176
+  },
+  "unit_tests_passed": 121,
+  "selection_and_request_preserve_duplicates": true,
+  "six_field_encoding_preserves_duplicates": true,
+  "identical_native_groups_allowed": true,
+  "distinct_native_group_conflicts_retained": true,
+  "game_verified": false,
+  "stacking_verified": false,
+  "price_murk": 1
+}

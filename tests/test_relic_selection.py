@@ -52,9 +52,9 @@ class FullRelicSelectionTests(unittest.TestCase):
         self.model.choose_positive(2,0,10)
         with self.assertRaises(ValueError):self.model.request(2)
 
-    def test_duplicate_and_cross_kind_rejected(self):
+    def test_cross_kind_and_negative_as_positive_rejected(self):
         self.model.choose_positive(0,0,1)
-        for args in [(0,1,1),(0,1,10),(2,0,20)]:
+        for args in [(0,1,10),(2,0,20)]:
             with self.assertRaises(ValueError):self.model.choose_positive(*args)
 
     def test_order_keeps_negative_with_its_positive(self):
@@ -85,12 +85,28 @@ class FullRelicSelectionTests(unittest.TestCase):
     def test_cannot_select_negative_without_positive(self):
         with self.assertRaises(ValueError):self.model.choose_negative(20)
 
-    def test_duplicate_negative_rejected_without_losing_pending(self):
-        self.model.choose_positive(2,0,10);self.model.choose_negative(20)
-        self.model.choose_positive(2,1,11)
-        with self.assertRaises(ValueError):self.model.choose_negative(20)
-        self.model.choose_negative(21)
-        self.assertEqual(self.model.drafts[2][1]["curse_id"],21)
+    def test_three_identical_positives_with_native_groups_are_preserved(self):
+        self.model.entries[1].update(compatibility_id=7,exclusivity_id=9)
+        for slot in range(3):self.model.choose_positive(0,slot,1)
+        request=self.model.request(0)
+        self.assertEqual(request['bundles'],[dict(effect_id=1,curse_id=None)]*3)
+
+    def test_three_identical_positive_negative_pairs_are_preserved(self):
+        self.model.entries[10].update(compatibility_id=7,exclusivity_id=9)
+        self.model.entries[20].update(compatibility_id=8,exclusivity_id=10)
+        for slot in range(3):
+            self.model.choose_positive(2,slot,10)
+            self.model.choose_negative(20)
+        self.assertEqual(self.model.request(2)['bundles'],[dict(effect_id=10,curse_id=20)]*3)
+        self.model.choose_positive(2,1,12)
+        self.assertEqual(self.model.drafts[2],[dict(effect_id=10,curse_id=20),dict(effect_id=12,curse_id=None),dict(effect_id=10,curse_id=20)])
+
+    def test_duplicate_selection_still_requires_negative_and_can_cancel(self):
+        for slot in range(3):self.model.choose_positive(2,slot,12)
+        self.model.choose_positive(2,1,10)
+        with self.assertRaises(ValueError):self.model.request(2)
+        self.model.cancel_negative()
+        self.assertEqual(self.model.request(2)['bundles'],[dict(effect_id=12,curse_id=None)]*3)
 
     def test_native_group_conflict_keeps_previous_draft(self):
         self.model.entries[1]["compatibility_id"]=7
