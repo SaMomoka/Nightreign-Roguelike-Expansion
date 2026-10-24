@@ -66,6 +66,15 @@ if($plan.token_goods){
   SetCell $lot 'lotItemId01' $e.goods_id;SetCell $lot 'lotItemCategory01' 1;SetCell $lot 'lotItemBasePoint01' 1000;SetCell $lot 'lotItemNum01' 1;SetCell $lot 'getItemFlagId' 0
  }
 }
+# AwardItemLot can traverse consecutive rows. Independent choices must have
+# empty neighbours in the complete composed table, not just distinct IDs.
+if($plan.token_goods){
+ $allLots=[Collections.Generic.HashSet[int]]::new()
+ foreach($row in $params.ItemLotParam_map.table.Rows){[void]$allLots.Add([int]$row.ID)}
+ foreach($e in @($plan.entries | Where-Object custom)){
+  if($allLots.Contains([int]$e.redeem_lot-1) -or $allLots.Contains([int]$e.redeem_lot+1)){throw "Numeric reward lot joins another group: $($e.redeem_lot)"}
+ }
+}
 $srcPool=@($params.ItemTableParam.table.Rows | Where-Object {$_.ID -eq 4200100 -and [TrainingBuild]::Get($_,'itemId') -eq 8000000})
 if($srcPool.Count -ne 1 -or [TrainingBuild]::Get($srcPool[0],'itemCategory') -ne 1){throw 'Unverified goods pool'}
 for($i=0;$i -lt 3;$i++){

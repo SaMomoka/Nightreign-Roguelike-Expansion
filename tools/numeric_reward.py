@@ -11,6 +11,7 @@ PLAYER=10000
 READY_FLAG=10009881
 SELECT_FLAG=10009900
 LOT_BASE=1900640000
+LOT_STRIDE=100  # Adjacent ItemLot rows form one multi-award group.
 EVENT_BASE=10009900
 
 def extra_entries(start):
@@ -39,7 +40,7 @@ def redemption_events(entries):
         ins(1000,4,'<B3x',1)])]
     for i,e in enumerate(x for x in entries if x.get('custom')):
         # All choices share one serialized event (below); flags are requests only.
-        e['redeem_flag']=SELECT_FLAG+i;e['redeem_lot']=LOT_BASE+i
+        e['redeem_flag']=SELECT_FLAG+i;e['redeem_lot']=LOT_BASE+i*LOT_STRIDE
     # One dispatcher, no wait between marker removal and award. Restart clears
     # every request, so simultaneously set flags cannot redeem one token twice.
     choices=[e for e in entries if e.get('custom')]
