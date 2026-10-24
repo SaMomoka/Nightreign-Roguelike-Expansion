@@ -33,8 +33,10 @@
   "full_catalog_build_evidence": "tests/ingame/RELIC-FILTER-COLOR-build.json",
   "allow_duplicate_positive_effects": true,
   "allow_duplicate_negative_effects": true,
-  "duplicate_effect_stacking_verified": false,
-  "duplicate_effect_policy": "custom_occurrence_aliases_candidate",
-  "duplicate_effect_game_status": "previous_build_drops_duplicates_candidate_pending",
-  "duplicate_alias_requires_loaded_package": true
+  "duplicate_effect_stacking_verified": true,
+  "duplicate_effect_policy": "custom_occurrence_aliases",
+  "duplicate_effect_game_status": "user_confirmed_tested_case_pass",
+  "duplicate_alias_requires_loaded_package": true,
+  "duplicate_effect_verification_scope": "user_report_for_tested_case_only_no_exact_values",
+  "duplicate_effect_restart_verified": false
 }
