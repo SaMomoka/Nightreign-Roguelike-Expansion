@@ -98,7 +98,8 @@ def run(root,folder,launched_after):
             if found:game.mailbox=int(found[0]['address'],16);break
             time.sleep(2)
         if game.mailbox is None:return
-        selected=[0,1,2]
+        initial=[8900999,8410100,8420200]
+        selected=[next((i for i,e in enumerate(plan['entries']) if e['goods_id']==g),j) for j,g in enumerate(initial)]
         while game_pid()==pid:
             snapshot=game.read(game.mailbox,16);v=struct.unpack('<4i',snapshot)
             if v==MARKERS:game.respond(snapshot,1)

@@ -1,0 +1,35 @@
+{
+  "status": "SINGLE_CHOICE_USER_TEST_PASSED",
+  "tested_package": "training_buffs_20261024_170842_5e15db",
+  "user_reply": "能领取，但点击数值强化后依旧是放背包中，且背包内物品无法交互",
+  "observed": "Read-only screenshot: native bag assignment UI, owned token count 0",
+  "pending_package": null,
+  "auto_open_verified": false,
+  "redemption_verified": false,
+  "custom_effect_verified": false,
+  "correction": "Separate independent map item lots by 100; reject adjacent rows in full composed table",
+  "second_attempt": {
+    "package": "training_buffs_20261024_171619_4d8dc6",
+    "user_reply": "点击后还是放入消耗品栏位，且该道具之后无法交互",
+    "loaded_goods_type": 2,
+    "loaded_parameter_prefix_bytes_compared": 128,
+    "loaded_parameter_prefix_matches": true,
+    "auto_open_verified": false,
+    "redemption_verified": false
+  },
+  "user_decision": "保留原版奖励卡，继续定位领取链路",
+  "third_attempt": {
+    "package": "training_buffs_20261024_173522_43011b",
+    "user_reply": "这个数值强化领取后选择后续的任意一项都会给全部选项的加成",
+    "secondary_menu_reached": true,
+    "single_choice_award_verified": false,
+    "auto_open_verified": null,
+    "individual_numeric_accuracy_verified": false
+  },
+  "fourth_attempt": {
+    "package": "training_buffs_20261024_174144_a2b53e",
+    "user_reply": "好，这个i项目测试完成了",
+    "single_choice_test_passed": true,
+    "scope": "按上一轮生命/FP单项领取要求记录通过；无具体数值，未扩展至全部12项、联机、读档。"
+  }
+}

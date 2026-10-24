@@ -1,4 +1,4 @@
-param([Parameter(Mandatory=$true)][string]$Package,[string]$ProjectRoot='E:\Codex\Project\黑环mod')
+﻿param([Parameter(Mandatory=$true)][string]$Package,[string]$ProjectRoot='E:\Codex\Project\黑环mod')
 $ErrorActionPreference='Stop'
 $root=(Resolve-Path $ProjectRoot).Path;$folder=(Resolve-Path $Package).Path
 if(-not $folder.StartsWith((Join-Path $root 'local/packages')+[IO.Path]::DirectorySeparatorChar)){throw 'Outside packages'}
@@ -19,7 +19,7 @@ public static class TrainingBuild {
 function Hash($b){[Convert]::ToHexString([Security.Cryptography.SHA256]::HashData([byte[]]$b))}
 function Param($b,$name){
  $f=@($b.Files | Where-Object {$_.Name.EndsWith("\$name.param")});if($f.Count -ne 1){throw 'Missing param'}
- $dn=if($name -eq 'ItemLotParam_enemy'){'ItemLotParam'}else{$name}
+ $dn=if($name -in @('ItemLotParam_enemy','ItemLotParam_map')){'ItemLotParam'}else{$name}
  $d=[SoulsFormats.PARAMDEF]::XmlDeserialize((Join-Path $lib "Assets/PARAM/NR/Defs/$dn.xml"),$true)
  $p=[SoulsFormats.PARAM]::Read($f[0].Bytes);$p.ApplyParamdef($d.GetFilteredParamdefForRegulationVersion([uint64]$b.Version))
  return @{file=$f[0];table=$p;original=$p.Write();added=[Collections.Generic.List[int]]::new()}
@@ -29,7 +29,7 @@ function Clone($p,$src,$id){if(@($p.table.Rows | Where-Object ID -eq $id).Count)
 function SetCell($r,$field,$value){[TrainingBuild]::Set($r,$field,$value)}
 $regPath=Join-Path $folder 'mod/regulation.bin';$reg=[SoulsFormats.SFUtil]::DecryptNightreignRegulation($regPath)
 if($reg.Version -ne '10350000'){throw 'Unsupported regulation'}
-$params=@{};foreach($n in 'EquipParamGoods','PermanentBuffParam','SpEffectParam','ItemTableParam','ItemLotParam_enemy','NpcParam'){$params[$n]=Param $reg $n}
+$params=@{};foreach($n in 'EquipParamGoods','PermanentBuffParam','SpEffectParam','ItemTableParam','ItemLotParam_enemy','ItemLotParam_map','NpcParam'){$params[$n]=Param $reg $n}
 foreach($e in $plan.entries){if($e.goods_id -le 0 -or $e.goods_id -gt 0x00ffffff){throw 'Goods ID exceeds packed item payload'}}
 foreach($e in @($plan.entries | Where-Object custom)){
  $g=Clone $params.EquipParamGoods (One $params.EquipParamGoods $e.source_goods) $e.goods_id
@@ -41,13 +41,39 @@ foreach($e in @($plan.entries | Where-Object custom)){
  SetCell $g 'vagrantItemLotId' $e.goods_id;SetCell $p 'spEffectId' $e.goods_id;SetCell $p 'numericValue' $e.numeric_value
  foreach($field in $e.fields.PSObject.Properties){SetCell $s $field.Name $field.Value}
 }
-foreach($e in $plan.entries){
+foreach($e in @($plan.entries | Where-Object {-not $_.token})){
  $g=One $params.EquipParamGoods $e.goods_id
  if([TrainingBuild]::Get($g,'goodsType') -ne 11){throw 'Candidate is not a permanent buff'}
  $pb=One $params.PermanentBuffParam ([TrainingBuild]::Get($g,'vagrantItemLotId'))
  $fx=One $params.SpEffectParam ([TrainingBuild]::Get($pb,'spEffectId'))
  if($e.custom -and ([TrainingBuild]::Get($fx,'spEffectTextId_1') -ne $e.goods_id)){throw 'Custom text reference mismatch'}
  if(-not $e.custom -and ([TrainingBuild]::Get($fx,'spEffectTextId_1') -ne $e.text_id -or [TrainingBuild]::Get($pb,'spEffectId') -ne $e.source_effect)){throw 'Native candidate differs from export'}
+}
+if($plan.token_goods){
+ # Match the native permanent reward path; a key item remains an inventory item.
+ $token=Clone $params.EquipParamGoods (One $params.EquipParamGoods 8000000) $plan.token_goods
+ $markerBuff=Clone $params.PermanentBuffParam (One $params.PermanentBuffParam 8000000) $plan.token_goods
+ $markerEffect=Clone $params.SpEffectParam (One $params.SpEffectParam 8000000) $plan.token_goods
+ SetCell $token 'vagrantItemLotId' $plan.token_goods
+ SetCell $markerBuff 'spEffectId' $plan.token_goods;SetCell $markerBuff 'numericValue' 0
+ SetCell $markerEffect 'maxHpRate' 1;SetCell $markerEffect 'spEffectTextId_1' $plan.token_goods
+ if([TrainingBuild]::Get($token,'goodsType') -ne 11){throw 'Marker must use permanent reward path'}
+ foreach($e in @($plan.entries | Where-Object custom)){
+  $lot=Clone $params.ItemLotParam_map (One $params.ItemLotParam_map 1) $e.redeem_lot
+  for($slot=1;$slot -le 8;$slot++){
+   $suffix=$slot.ToString('00');SetCell $lot "lotItemId$suffix" 0;SetCell $lot "lotItemCategory$suffix" 0;SetCell $lot "lotItemBasePoint$suffix" 0;SetCell $lot "lotItemNum$suffix" 0
+  }
+  SetCell $lot 'lotItemId01' $e.goods_id;SetCell $lot 'lotItemCategory01' 1;SetCell $lot 'lotItemBasePoint01' 1000;SetCell $lot 'lotItemNum01' 1;SetCell $lot 'getItemFlagId' 0
+ }
+}
+# AwardItemLot can traverse consecutive rows. Independent choices must have
+# empty neighbours in the complete composed table, not just distinct IDs.
+if($plan.token_goods){
+ $allLots=[Collections.Generic.HashSet[int]]::new()
+ foreach($row in $params.ItemLotParam_map.table.Rows){[void]$allLots.Add([int]$row.ID)}
+ foreach($e in @($plan.entries | Where-Object custom)){
+  if($allLots.Contains([int]$e.redeem_lot-1) -or $allLots.Contains([int]$e.redeem_lot+1)){throw "Numeric reward lot joins another group: $($e.redeem_lot)"}
+ }
 }
 $srcPool=@($params.ItemTableParam.table.Rows | Where-Object {$_.ID -eq 4200100 -and [TrainingBuild]::Get($_,'itemId') -eq 8000000})
 if($srcPool.Count -ne 1 -or [TrainingBuild]::Get($srcPool[0],'itemCategory') -ne 1){throw 'Unverified goods pool'}
@@ -111,8 +137,15 @@ $event=[SoulsFormats.EMEVD+Event]::new([long]10009880,[SoulsFormats.EMEVD+Event+
 foreach($i in $plan.event_instructions){$event.Instructions.Add([SoulsFormats.EMEVD+Instruction]::new([int]$i.bank,[int]$i.id,[Convert]::FromHexString($i.hex)))}
 $ev.Events.Add($event);$init=@($ev.Events | Where-Object ID -eq 0)[0];$before=$init.Instructions.Count
 $init.Instructions.Add([SoulsFormats.EMEVD+Instruction]::new(2000,0,[Convert]::FromHexString($plan.event_init)))
+foreach($ne in $plan.numeric_events){
+ if(@($ev.Events | Where-Object ID -eq $ne.id).Count){throw 'Numeric event collision'}
+ $extra=[SoulsFormats.EMEVD+Event]::new([long]$ne.id,[SoulsFormats.EMEVD+Event+RestBehaviorType]::Restart)
+ foreach($ni in $ne.instructions){$extra.Instructions.Add([SoulsFormats.EMEVD+Instruction]::new([int]$ni.bank,[int]$ni.id,[Convert]::FromHexString($ni.hex)))}
+ $ev.Events.Add($extra);$init.Instructions.Add([SoulsFormats.EMEVD+Instruction]::new(2000,0,[byte[]]([BitConverter]::GetBytes([int]0)+[BitConverter]::GetBytes([int]$ne.id)+[BitConverter]::GetBytes([int]0))))
+}
 $dest=Join-Path $folder "mod/$eventRelative";[IO.Directory]::CreateDirectory([IO.Path]::GetDirectoryName($dest)) | Out-Null;$ev.Write($dest)
 $re=[SoulsFormats.EMEVD]::Read($dest);[void]$re.Events.Remove(@($re.Events | Where-Object ID -eq 10009880)[0]);(@($re.Events | Where-Object ID -eq 0)[0]).Instructions.RemoveAt($before)
+foreach($ne in $plan.numeric_events){[void]$re.Events.Remove(@($re.Events | Where-Object ID -eq $ne.id)[0]);(@($re.Events | Where-Object ID -eq 0)[0]).Instructions.RemoveAt($before)}
 if((Hash $re.Write()) -ne (Hash $eventOriginal)){throw 'Other events changed'}
 
 $talk=Join-Path $folder 'mod/script/talk/m10_00_00_00.talkesdbnd.dcx';$b=[SoulsFormats.BND4]::Read($talk)
@@ -133,8 +166,14 @@ foreach($item in $plan.states){
  $group.Add([long]$item.id,$s)
 }
 $s=[SoulsFormats.ESD+State]::new();$s.Conditions.Add([SoulsFormats.ESD+Condition]::new([long]$plan.root_state,[byte[]]@(65,161)));$group[[long]1]=$s
+if($plan.token_goods -and $targetScript -eq 't607001000.esd'){
+ $idle=$esd.StateGroups[[long]2147483647][[long]1]
+ $idle.Conditions.Insert(0,[SoulsFormats.ESD+Condition]::new([long]6,[Convert]::FromHexString($plan.auto_open_eval)))
+ $esd.StateGroups[[long]2147483647][[long]2].Conditions.Insert(0,[SoulsFormats.ESD+Condition]::new([long]6,[Convert]::FromHexString($plan.auto_open_eval)))
+}
 $f.Bytes=$esd.Write();$b.Write($talk);$rb=[SoulsFormats.BND4]::Read($talk);$rs=[SoulsFormats.ESD]::Read(($rb.Files | Where-Object {$_.Name.EndsWith(('\'+$targetScript))}).Bytes)
 foreach($item in $plan.states){[void]$rs.StateGroups[[long]2147483644].Remove([long]$item.id)};$rs.StateGroups[[long]2147483644][[long]1]=$original
+if($plan.token_goods -and $targetScript -eq 't607001000.esd'){$rs.StateGroups[[long]2147483647][[long]1].Conditions.RemoveAt(0);$rs.StateGroups[[long]2147483647][[long]2].Conditions.RemoveAt(0)}
 if((Hash $rs.Write()) -ne (Hash $old)){throw 'Original training script changed outside menu'}
 }
 foreach($lang in 'zhocn','engus'){
@@ -146,7 +185,16 @@ foreach($lang in 'zhocn','engus'){
   $f=@($msg.Files | Where-Object {$_.Name.EndsWith('\'+$suffix)});if($f.Count -ne 1){throw "Missing $suffix"};$fm=[SoulsFormats.FMG]::Read($f[0].Bytes)
   foreach($e in $plan.entries){if($e.goods_id -le 0 -or $e.goods_id -gt 0x00ffffff){throw 'Goods ID exceeds packed item payload'}}
 foreach($e in @($plan.entries | Where-Object custom)){if(@($fm.Entries | Where-Object ID -eq $e.goods_id).Count){throw 'Buff text collision'};$fm.Entries.Add([SoulsFormats.FMG+Entry]::new($fm,[int]$e.goods_id,[string]$e.name))};$f[0].Bytes=$fm.Write()
- };$msg.Write($path)
+ }
+ if($plan.token_goods){
+  foreach($bank in 'GoodsName.fmg','GoodsInfo.fmg','GoodsCaption.fmg','PermanentBuffName.fmg','PermanentBuffInfo.fmg','AttachEffectName.fmg','AttachEffectInfo.fmg'){
+   $tf=@($msg.Files | Where-Object {$_.Name.EndsWith('\'+$bank)})[0];$tm=[SoulsFormats.FMG]::Read($tf.Bytes)
+   if(@($tm.Entries | Where-Object ID -eq $plan.token_goods).Count){throw 'Token text collision'}
+   $label=if($bank -like '*Name.fmg'){'数值强化'}else{'领取后，从数值强化中任选一项。取消可稍后继续选择。'}
+   $tm.Entries.Add([SoulsFormats.FMG+Entry]::new($tm,[int]$plan.token_goods,$label));$tf.Bytes=$tm.Write()
+  }
+ }
+ $msg.Write($path)
  $verifyMsg=[SoulsFormats.BND4]::Read($path)
  foreach($bank in 'PermanentBuffName.fmg','PermanentBuffInfo.fmg','AttachEffectName.fmg','AttachEffectInfo.fmg'){
   $vfm=[SoulsFormats.FMG]::Read(($verifyMsg.Files | Where-Object {$_.Name.EndsWith('\'+$bank)}).Bytes)
@@ -156,4 +204,4 @@ foreach($e in @($plan.entries | Where-Object custom)){if(@($fm.Entries | Where-O
   }
  }
 }
-@{status='BUILD_PASS_GAME_TEST_PENDING';spawn_position=@($spawnX,$spawnY,$spawnZ);spawn_reference_entities=@(10000404,10000405);custom_buffs=6;native_controls=@($plan.entries | Where-Object {-not $_.custom}).Count;owned_pool_rows=3;original_params_preserved=$true;original_map_preserved=$true;original_events_preserved=$true;original_training_preserved=$true;game_verified=$false;drop_command='2004[37] Force Character Treasure: training reward path requires game test'} | ConvertTo-Json | Set-Content (Join-Path $folder 'training-build-report.json') -Encoding utf8
+@{status='BUILD_PASS_GAME_TEST_PENDING';spawn_position=@($spawnX,$spawnY,$spawnZ);spawn_reference_entities=@(10000404,10000405);custom_buffs=@($plan.entries | Where-Object custom).Count;native_controls=@($plan.entries | Where-Object {-not $_.custom -and -not $_.token}).Count;numeric_choice_experimental=[bool]$plan.token_goods;owned_pool_rows=3;original_params_preserved=$true;original_map_preserved=$true;original_events_preserved=$true;original_training_preserved=$true;game_verified=$false;drop_command='2004[37] Force Character Treasure: training reward path requires game test'} | ConvertTo-Json | Set-Content (Join-Path $folder 'training-build-report.json') -Encoding utf8

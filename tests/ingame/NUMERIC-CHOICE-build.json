@@ -1,0 +1,30 @@
+{
+  "status": "BUILD_PASS_GAME_TEST_PENDING",
+  "package": "training_buffs_20261024_174144_a2b53e",
+  "unit_tests": 140,
+  "validate": "PASS",
+  "report": {
+    "original_events_preserved": true,
+    "numeric_choice_experimental": true,
+    "custom_buffs": 12,
+    "status": "BUILD_PASS_GAME_TEST_PENDING",
+    "original_map_preserved": true,
+    "game_verified": false,
+    "drop_command": "2004[37] Force Character Treasure: training reward path requires game test",
+    "owned_pool_rows": 3,
+    "spawn_reference_entities": [
+      10000404,
+      10000405
+    ],
+    "native_controls": 63,
+    "original_params_preserved": true,
+    "original_training_preserved": true,
+    "spawn_position": [
+      38.53150177001953,
+      10.123000144958496,
+      103.42150115966797
+    ]
+  },
+  "old_contiguous_allocation_regression_failures": 12,
+  "isolated_lot_stride": 100
+}
