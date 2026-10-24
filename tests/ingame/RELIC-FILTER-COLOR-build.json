@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "status": "BUILD_AND_DATA_PASS_GAME_TEST_PENDING",
+  "package": "full_relic_20261024_153429_c15f98",
+  "entry_labels": [
+    "普通遗物",
+    "深夜遗物"
+  ],
+  "editor_actions": 6,
+  "colors": [
+    "红色",
+    "蓝色",
+    "黄色",
+    "绿色"
+  ],
+  "products": [
+    {
+      "editor": 0,
+      "color": 0,
+      "relic_id": 9000000,
+      "shop_id": 1900200000,
+      "template_id": 102
+    },
+    {
+      "editor": 0,
+      "color": 1,
+      "relic_id": 9000001,
+      "shop_id": 1900200001,
+      "template_id": 111
+    },
+    {
+      "editor": 0,
+      "color": 2,
+      "relic_id": 9000002,
+      "shop_id": 1900200002,
+      "template_id": 120
+    },
+    {
+      "editor": 0,
+      "color": 3,
+      "relic_id": 9000003,
+      "shop_id": 1900200003,
+      "template_id": 129
+    },
+    {
+      "editor": 2,
+      "color": 0,
+      "relic_id": 9000004,
+      "shop_id": 1900200004,
+      "template_id": 2000002
+    },
+    {
+      "editor": 2,
+      "color": 1,
+      "relic_id": 9000005,
+      "shop_id": 1900200005,
+      "template_id": 2000102
+    },
+    {
+      "editor": 2,
+      "color": 2,
+      "relic_id": 9000006,
+      "shop_id": 1900200006,
+      "template_id": 2000202
+    },
+    {
+      "editor": 2,
+      "color": 3,
+      "relic_id": 9000007,
+      "shop_id": 1900200007,
+      "template_id": 2000302
+    }
+  ],
+  "filter_coverage": [
+    {
+      "editor": 0,
+      "negative": false,
+      "effects": 406,
+      "categories": 4,
+      "subcategories": 56,
+      "families": 354,
+      "largest_family": 4,
+      "unclassified": 19
+    },
+    {
+      "editor": 2,
+      "negative": false,
+      "effects": 326,
+      "categories": 3,
+      "subcategories": 52,
+      "families": 268,
+      "largest_family": 3,
+      "unclassified": 0
+    },
+    {
+      "editor": 2,
+      "negative": true,
+      "effects": 24,
+      "categories": 1,
+      "subcategories": 3,
+      "families": 24,
+      "largest_family": 1,
+      "unclassified": 0
+    }
+  ],
+  "states": 7551,
+  "texts": 5586,
+  "native_filter_panel_reused": false,
+  "native_filter_data_reused": true,
+  "native_payment": true,
+  "price_murk": 1,
+  "game_verified": false,
+  "limitations": [
+    "Native dialog hierarchy, not the Ritual grid/filter panel.",
+    "Colors, purchases, repeated recipes and restart persistence require in-game confirmation.",
+    "New package uses a fresh isolated save; do not load prior experimental custom items."
+  ]
+}

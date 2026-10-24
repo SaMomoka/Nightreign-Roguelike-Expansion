@@ -18,6 +18,7 @@ from full_relic_menu import MARKERS,MAGIC,SHOP_BASE
 from relic_presets import ROOT,load
 from relic_launch import verify_package
 from relic_selection import RelicSelection
+from relic_filters import EDITORS, product_index
 from probe_relic_work_values import scan,MBI
 from probe_relic_params import ReadOnlyGame
 
@@ -46,7 +47,7 @@ class OwnedGame(ReadOnlyGame):
         if not self.handle:raise ctypes.WinError(ctypes.get_last_error())
         self.k.WriteProcessMemory.argtypes=[W.HANDLE,ctypes.c_void_p,ctypes.c_void_p,ctypes.c_size_t,ctypes.POINTER(ctypes.c_size_t)]
         self.layout={r["id"]:r for r in layout["rows"]}
-        if set(self.layout)!={9000000,9000001,9000002,9000003}:
+        if set(self.layout)!=set(range(9000000,9000008)):
             self.close();raise ValueError("Unapproved runtime row set")
         self.row_addresses={};self.last_written={};self.mailbox=None
 
@@ -66,7 +67,7 @@ class OwnedGame(ReadOnlyGame):
         if self.read(address,len(value))!=value:raise OSError("Owned-data write readback failed")
 
     def prepare(self,editor,request,entries):
-        if editor not in range(4):raise ValueError("Unknown editor")
+        index=product_index(editor,request['color'])
         table=self.param("EquipParamAntique")  # Re-resolve after potential map/resource changes.
         addresses={i:table["rows"].get(i) for i in self.layout}
         if any(a is None for a in addresses.values()):raise ValueError("Full editor rows not loaded")
@@ -75,12 +76,12 @@ class OwnedGame(ReadOnlyGame):
             if current not in (original,self.last_written.get(i)):
                 raise ValueError("Another mod or reload changed an owned row")
         self.row_addresses=addresses
-        row_id=9000000+editor;row=self.layout[row_id];address=addresses[row_id]
+        row_id=9000000+index;row=self.layout[row_id];address=addresses[row_id]
         original=bytes.fromhex(row["initial_hex"]);current=self.read(address,48)
         value=row_bytes(original,row["field_offsets"],request["bundles"],entries)
         self.guarded_write(address,current,value)
         self.last_written[row_id]=value
-        return SHOP_BASE+editor
+        return SHOP_BASE+index
 
     def respond(self,snapshot,value):
         if self.mailbox is None or len(snapshot)!=16 or struct.unpack_from("<i",snapshot)[0]!=MAGIC:
@@ -92,8 +93,13 @@ class OwnedGame(ReadOnlyGame):
 class Dispatcher:
     def __init__(self,catalog,plan,prepare):
         self.model=RelicSelection(catalog);self.labels=plan["labels"];self.prepare=prepare
+        self.color_labels=plan['color_labels']
 
     def dispatch(self,operation,payload):
+        if operation in (600,602):
+            self.model.choose_color(operation-600,payload);return 1
+        if operation in (700,702):
+            return self.color_labels[str(self.model.colors[operation-700])]
         if 100<=operation<112:
             editor,slot=divmod(operation-100,3)
             b=self.model.drafts[editor][slot]
@@ -111,10 +117,10 @@ class Dispatcher:
             self.model.choose_negative(payload);return 1
         if operation==400:
             self.model.cancel_negative();return 1
-        if 500<=operation<504:
+        if operation in (500,502):
             editor=operation-500;request=self.model.request(editor)
             shop=self.prepare(editor,request,self.model.entries)
-            if shop!=SHOP_BASE+editor:raise ValueError("Wrong prepared shop")
+            if shop!=SHOP_BASE+product_index(editor,request['color']):raise ValueError("Wrong prepared shop")
             return self.model.verify_ack(dict(request,shop_id=shop,runtime_verified=True))
         raise ValueError("Unknown native request operation")
 

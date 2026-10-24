@@ -1,15 +1,13 @@
 {
   "schema_version": 1,
-  "status": "CURATED_CRAFTING_CONFIRMED_FULL_RUNTIME_TEST_PENDING",
+  "status": "FILTER_COLOR_BUILD_PASS_GAME_TEST_PENDING",
   "game_verified": false,
-  "normal_editors": 2,
-  "deep_editors": 2,
-  "entries_per_editor": 5,
+  "normal_editors": 1,
+  "deep_editors": 1,
+  "entries_per_editor": 6,
   "purchase_price_murk": 1,
-  "normal_combinations": 20,
-  "deep_combinations": 63,
   "runtime_interaction": "native_esd_and_shop",
-  "draft_scope": "current_editor_session",
+  "draft_scope": "one_per_kind_in_current_game_process",
   "requires_custom_relic_definitions": true,
   "difficulty_budget_enforced": false,
   "multiplayer_verified": false,
@@ -19,5 +17,18 @@
   "full_catalog_runtime_bound": true,
   "ingame_evidence": "tests/ingame/RELIC-EDITOR-ingame.json",
   "full_catalog_game_verified": false,
-  "full_catalog_documentation": "docs/19-full-relic-runtime.md"
+  "full_catalog_documentation": "docs/21-relic-filter-colors.md",
+  "legacy_curated_combinations": {
+    "normal": 20,
+    "deep": 63
+  },
+  "colors": [
+    "red",
+    "blue",
+    "yellow",
+    "green"
+  ],
+  "filter_source": "native_attach_effect_filter_hierarchy",
+  "native_filter_panel_reused": false,
+  "full_catalog_build_evidence": "tests/ingame/RELIC-FILTER-COLOR-build.json"
 }

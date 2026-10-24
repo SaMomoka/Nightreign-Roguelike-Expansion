@@ -5,6 +5,7 @@ from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/"tools"))
 from full_relic_menu import compile_menu,work,SHOP_BASE
 from relic_runtime import Dispatcher,row_bytes
+from relic_filters import product_index
 from test_relic_selection import fixture
 
 
@@ -16,7 +17,7 @@ class FullRuntimeProtocolTests(unittest.TestCase):
         self.prepared=[]
         def prepare(editor,request,entries):
             self.prepared.append(request)
-            return SHOP_BASE+editor
+            return SHOP_BASE+product_index(editor,request['color'])
         self.dispatcher=Dispatcher(self.catalog,self.plan,prepare)
 
     def test_full_compiler_has_only_defined_native_work_indices(self):
@@ -35,7 +36,7 @@ class FullRuntimeProtocolTests(unittest.TestCase):
     def test_all_three_complete_slots_prepare_one_native_shop(self):
         for slot,effect in enumerate((1,2,3)):
             self.assertEqual(self.dispatcher.dispatch(200+slot,effect),1)
-        self.assertEqual(self.dispatcher.dispatch(500,0),SHOP_BASE)
+        self.assertEqual(self.dispatcher.dispatch(500,0),SHOP_BASE+3)
         self.assertEqual(len(self.prepared),1)
         self.assertEqual(self.prepared[0]["price"],1)
 

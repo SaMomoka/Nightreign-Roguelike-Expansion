@@ -4,7 +4,7 @@ $root=(Resolve-Path -LiteralPath $ProjectRoot).Path
 $folder=(Resolve-Path -LiteralPath $Package).Path
 if(-not $folder.StartsWith((Join-Path $root 'local/packages')+[IO.Path]::DirectorySeparatorChar)){throw 'Package outside project'}
 $plan=Get-Content -LiteralPath (Join-Path $folder 'full-menu-plan.json') -Raw | ConvertFrom-Json
-if($plan.kind -ne 'full_relic_runtime_menu' -or $plan.state_first -ne 400000 -or $plan.state_end -gt 500000){throw 'Invalid full menu plan'}
+if($plan.schema_version -ne 2 -or $plan.kind -ne 'full_relic_runtime_menu' -or $plan.state_first -ne 400000 -or $plan.state_end -gt 500000){throw 'Invalid full menu plan'}
 $lib=Join-Path $root 'local/tools/Smithbox-2.2.6'
 [Environment]::CurrentDirectory=$lib
 Set-Location -LiteralPath $lib
@@ -65,11 +65,20 @@ foreach($product in $plan.initial_products){
     $old=$rowMap[[int]$product.id]
     $template=$rowMap[[int]$product.template_id]
     if($null -eq $old -or $null -eq $template){throw 'Missing known row'}
+    if([NreFull]::Get($template,'relicColor') -ne $product.color -or [NreFull]::Get($template,'isDeepRelic') -ne [int]($product.editor -eq 2) -or [NreFull]::Get($template,'iconId') -ne $product.icon_id){throw 'Color template mismatch'}
     $new=[SoulsFormats.PARAM+Row]::new($template);$new.ID=[int]$product.id
     foreach($field in $product.fields.PSObject.Properties){[NreFull]::Set($new,$field.Name,[int]$field.Value)}
     $index=$ant.table.Rows.IndexOf($old);$ant.table.Rows[$index]=$new
 }
 $ant.file.Bytes=$ant.table.Write()
+$shop=Param $reg 'ShopLineupParam'
+foreach($product in $plan.initial_products){
+    $shopRow=@($shop.table.Rows | Where-Object ID -eq $product.shop_id)
+    if($shopRow.Count -ne 1){throw 'Missing color product shop row'}
+    foreach($pair in @{equipId=$product.id;value=1;costType=4;sellQuantity=-1;setNum=1;eventFlag_forStock=0;eventFlag_forRelease=0}.GetEnumerator()){
+        if([NreFull]::Get($shopRow[0],$pair.Key) -ne $pair.Value){throw 'Color shop mapping, cost or stock mismatch'}
+    }
+}
 $raw=[byte[]]$ant.file.Bytes.ToArray()
 $count=[BitConverter]::ToUInt16($raw,10)
 if($count -ne $ant.table.Rows.Count){throw 'Native header layout mismatch'}
@@ -86,7 +95,7 @@ for($i=0;$i -lt $count;$i++){
     }
     $layout+=@{id=$id;size=48;initial_hex=[Convert]::ToHexString([byte[]]$bytes);field_offsets=$offsets}
 }
-if($layout.Count -ne 4){throw 'Missing runtime row guards'}
+if($layout.Count -ne 8){throw 'Missing runtime row guards'}
 [SoulsFormats.SFUtil]::EncryptNightreignRegulation($regPath,$reg,$reg.Compression)
 $round=[SoulsFormats.SFUtil]::DecryptNightreignRegulation($regPath)
 $rAnt=Param $round 'EquipParamAntique'
@@ -159,10 +168,30 @@ foreach($language in 'zhocn','engus'){
     $rt=($back.Files | Where-Object {$_.Name.EndsWith('\EventTextForTalk.fmg')}).Bytes
     if((Hash $rt.ToArray()) -ne (Hash $f.Bytes.ToArray())){throw 'Text roundtrip failed'}
 }
-[ordered]@{schema_version=1;rows=$layout;table='EquipParamAntique';native_row_size=48;
+$extraction=Get-Content (Join-Path $root 'local/native-menu/extraction.json') -Raw | ConvertFrom-Json
+foreach($language in 'zhocn','engus'){
+    $relative="msg/$language/item_dlc01.msgbnd.dcx"
+    $sourcePath=Join-Path $root "local/native-menu/original/$relative"
+    $sourceHash=(Get-FileHash -LiteralPath $sourcePath).Hash
+    if(@($extraction.files | Where-Object {$_.path -eq $relative -and $_.sha256 -eq $sourceHash}).Count -ne 1){throw 'Unverified item text source'}
+    $msg=[SoulsFormats.BND4]::Read($sourcePath)
+    $f=@($msg.Files | Where-Object {$_.Name.EndsWith('\AntiqueName.fmg')})[0]
+    $text=[SoulsFormats.FMG]::Read($f.Bytes)
+    $zhColors=@('红色','蓝色','黄色','绿色');$enColors=@('Red','Blue','Yellow','Green')
+    foreach($product in $plan.initial_products){
+        if(@($text.Entries | Where-Object ID -eq $product.id).Count){throw 'Custom item text collision'}
+        if($language -eq 'zhocn'){$name='自造'+$zhColors[$product.color]+$(if($product.editor -eq 2){'深夜遗物'}else{'遗物'})}
+        else{$name='Crafted '+$enColors[$product.color]+$(if($product.editor -eq 2){' Deep Relic'}else{' Relic'})}
+        $text.Entries.Add([SoulsFormats.FMG+Entry]::new($text,[int]$product.id,$name))
+    }
+    $f.Bytes=$text.Write();$target=Join-Path $folder "mod/$relative";$msg.Write($target)
+    $back=[SoulsFormats.BND4]::Read($target)
+    if((Hash ($back.Files | Where-Object {$_.Name.EndsWith('\AntiqueName.fmg')}).Bytes.ToArray()) -ne (Hash $f.Bytes.ToArray())){throw 'Item name roundtrip failed'}
+}
+[ordered]@{schema_version=2;rows=$layout;table='EquipParamAntique';native_row_size=48;
     paramdef_sha256=(Get-FileHash -LiteralPath (Join-Path $lib 'Assets/PARAM/NR/Defs/EquipParamAntique.xml')).Hash} |
     ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $folder 'runtime-layout.json') -Encoding utf8
 [ordered]@{status='BUILD_PASS_RUNTIME_TEST_PENDING';states=@($plan.states).Count;texts=@($plan.texts).Count;
-    native_row_guards=4;native_work_values=4;esd_restore_verified=$true;resource_roundtrips_verified=$true;
+    native_row_guards=8;visible_editors=2;colors=4;shop_mapping_and_price_verified=$true;native_filter_hierarchy=$true;native_work_values=4;esd_restore_verified=$true;resource_roundtrips_verified=$true;
     original_game_modified=$false;game_verified=$false} |
     ConvertTo-Json | Set-Content -LiteralPath (Join-Path $folder 'full-build-report.json') -Encoding utf8

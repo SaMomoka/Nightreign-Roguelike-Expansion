@@ -17,6 +17,16 @@ class RelicSelection:
         self.drafts = [[dict(effect_id=None, curse_id=None) for _ in range(3)] for _ in range(4)]
         self.pending = None
         self.prepared = None
+        self.colors = [3] * 4
+
+    def choose_color(self, editor, color):
+        self.kind(editor)
+        if type(color) is not int or color not in range(4):
+            raise ValueError("Invalid native relic color")
+        if self.pending is not None:
+            raise ValueError("Finish or cancel the pending negative selection")
+        self.colors[editor] = color
+        self._changed()
 
     @staticmethod
     def kind(editor):
@@ -133,7 +143,7 @@ class RelicSelection:
                 raise ValueError("Invalid positive/negative binding")
         self._compatible([value for b in bundles for value in (b["effect_id"],b["curse_id"])])
         bundles.sort(key=lambda b: (self.entries[b["effect_id"]]["order"], b["effect_id"]))
-        return dict(kind=kind, bundles=bundles, price=1, currency_cost_type=4,
+        return dict(kind=kind, color=self.colors[editor], bundles=bundles, price=1, currency_cost_type=4,
                     editor=editor, session=self.session, version=self.version)
 
     def request(self, editor):

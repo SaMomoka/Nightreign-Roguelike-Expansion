@@ -38,7 +38,8 @@ def verify_package(folder,root=ROOT):
         required.update({"editor-plan.json","mod/editor-report.json","reward-base.bin"})
     if kind=="full_relic_editor":
         required.update({"full-menu-plan.json","runtime-catalog.json","runtime-layout.json","full-build-report.json"})
-        tools={"relic_runtime.py","relic_selection.py","full_relic_menu.py","probe_relic_params.py","probe_relic_work_values.py"}
+        tools={"relic_runtime.py","relic_selection.py","full_relic_menu.py","probe_relic_params.py","probe_relic_work_values.py","relic_filters.py"}
+        required.update({f"mod/msg/{lang}/item_dlc01.msgbnd.dcx" for lang in ('zhocn','engus')})
         tool_hashes=metadata.get("tool_hashes",{})
         if set(tool_hashes)!=tools or any(sha(root/"tools"/name)!=tool_hashes[name] for name in tools):
             raise ValueError("运行时模块已变化，需要重新构建完整包")
