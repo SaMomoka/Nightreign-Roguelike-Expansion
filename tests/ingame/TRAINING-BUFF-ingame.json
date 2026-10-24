@@ -1,0 +1,27 @@
+{
+  "status": "NATIVE_PICKUP_PASS_CUSTOM_BUFF_FAILED_FIX_PENDING",
+  "date": "2026-10-24",
+  "tested_package": "training_buffs_20261024_162619_3c8dae",
+  "user_reply": "能生成，但生成的潜在能力掉在了里面。无法靠近交互",
+  "menu_and_generation_user_confirmed": true,
+  "accessible_drop_verified": true,
+  "selection_verified": false,
+  "buff_effect_verified": false,
+  "repeat_generation_verified": false,
+  "correction": "Place carrier directly between original training targets 10000404 and 10000405",
+  "second_attempt": {
+    "package": "training_buffs_20261024_163054_ff420c",
+    "user_reply": "还是在里面，交互不了",
+    "observation": "Read-only screenshot shows drop behind tent furniture",
+    "player_warp_fix_verified": false,
+    "location_user_feedback": "箱子和弓架中间偏后"
+  },
+  "pending_package": "training_buffs_20261024_164953_7c4972",
+  "native_buff_effect_verified": true,
+  "third_attempt": {
+    "package": "training_buffs_20261024_163559_c2fe0f",
+    "feedback": "原生buff可正常拾取并获得加成，新设定的buff无法显示，拾取时可放背包内，拾取完无变化",
+    "screenshot_observation": "Native HP +10% and physical attack +6% render; custom reward shows ?GoodsName? / ?GoodsInfo?",
+    "custom_buff_effect_verified": false
+  }
+}
