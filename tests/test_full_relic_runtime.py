@@ -5,18 +5,21 @@ from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/"tools"))
 from full_relic_menu import compile_menu,work,SHOP_BASE
 from relic_runtime import Dispatcher,row_bytes
+from relic_filters import product_index
 from test_relic_selection import fixture
 
 
 class FullRuntimeProtocolTests(unittest.TestCase):
     def setUp(self):
         self.catalog=fixture()
-        for e in self.catalog["entries"]:e["deterministic_pool"]=100000+e["effect_id"]
+        for e in self.catalog["entries"]:
+            e["deterministic_pool"]=100000+e["effect_id"]
+            e["duplicate_pools"]=[100000+e["effect_id"],200000+e["effect_id"],300000+e["effect_id"]]
         self.plan=compile_menu(self.catalog)
         self.prepared=[]
         def prepare(editor,request,entries):
             self.prepared.append(request)
-            return SHOP_BASE+editor
+            return SHOP_BASE+product_index(editor,request['color'])
         self.dispatcher=Dispatcher(self.catalog,self.plan,prepare)
 
     def test_full_compiler_has_only_defined_native_work_indices(self):
@@ -35,7 +38,7 @@ class FullRuntimeProtocolTests(unittest.TestCase):
     def test_all_three_complete_slots_prepare_one_native_shop(self):
         for slot,effect in enumerate((1,2,3)):
             self.assertEqual(self.dispatcher.dispatch(200+slot,effect),1)
-        self.assertEqual(self.dispatcher.dispatch(500,0),SHOP_BASE)
+        self.assertEqual(self.dispatcher.dispatch(500,0),SHOP_BASE+3)
         self.assertEqual(len(self.prepared),1)
         self.assertEqual(self.prepared[0]["price"],1)
 
@@ -72,3 +75,23 @@ class FullRuntimeProtocolTests(unittest.TestCase):
     def test_layout_or_pool_uncertainty_rejects_preparation(self):
         with self.assertRaises(ValueError):row_bytes(bytes(48),[0,4,8,12,16,20],[],{})
         with self.assertRaises(ValueError):self.dispatcher.dispatch(999,0)
+
+    def test_duplicate_recipe_reaches_native_row_writer_without_deduplication(self):
+        self.dispatcher.model.entries[10].update(compatibility_id=7,exclusivity_id=9)
+        self.dispatcher.model.entries[20].update(compatibility_id=8,exclusivity_id=10)
+        for slot in range(3):
+            self.assertEqual(self.dispatcher.dispatch(206+slot,10),2)
+            self.assertEqual(self.dispatcher.dispatch(306+slot,20),1)
+        self.dispatcher.dispatch(602,1)
+        self.assertEqual(self.dispatcher.dispatch(502,0),SHOP_BASE+5)
+        request=self.prepared[-1]
+        offsets=[16,20,24,32,36,40]
+        raw=row_bytes(bytes(48),offsets,request['bundles'],self.dispatcher.model.entries)
+        self.assertEqual([struct.unpack_from('<i',raw,i)[0] for i in offsets],[100010,200010,300010,100020,200020,300020])
+        self.assertEqual(request['price'],1)
+
+    def test_duplicate_requires_aliases_and_unique_recipe_keeps_original_pool(self):
+        entries=self.dispatcher.model.entries
+        del entries[10]['duplicate_pools']
+        with self.assertRaises(ValueError):
+            row_bytes(bytes(48),[16,20,24,32,36,40],[dict(effect_id=10,curse_id=None)]*3,entries)

@@ -17,6 +17,16 @@ class RelicSelection:
         self.drafts = [[dict(effect_id=None, curse_id=None) for _ in range(3)] for _ in range(4)]
         self.pending = None
         self.prepared = None
+        self.colors = [3] * 4
+
+    def choose_color(self, editor, color):
+        self.kind(editor)
+        if type(color) is not int or color not in range(4):
+            raise ValueError("Invalid native relic color")
+        if self.pending is not None:
+            raise ValueError("Finish or cancel the pending negative selection")
+        self.colors[editor] = color
+        self._changed()
 
     @staticmethod
     def kind(editor):
@@ -62,10 +72,10 @@ class RelicSelection:
         self.prepared = None
 
     def _compatible(self, values):
-        """Retain the project's conservative native group policy."""
+        """Allow repeated identical IDs; retain conflicts between distinct effects."""
         for field in ("compatibility_id","exclusivity_id"):
             seen=set()
-            for value in values:
+            for value in set(values):
                 if value is None:continue
                 group=self.entries[value].get(field,-1)
                 if group>=0:
@@ -80,8 +90,6 @@ class RelicSelection:
         self._position(editor, slot)
         if effect_id not in self.candidates(editor):
             raise ValueError("Effect is not a selectable positive relic effect")
-        if any(b["effect_id"] == effect_id for i, b in enumerate(self.drafts[editor]) if i != slot):
-            raise ValueError("Duplicate positive effect")
         self._compatible(self._others(editor,slot)+[effect_id])
         entry = self.entries[effect_id]
         self._changed()
@@ -101,8 +109,6 @@ class RelicSelection:
         editor, slot = pending["editor"], pending["slot"]
         if negative_id not in self.candidates(editor, negative=True):
             raise ValueError("Invalid negative relic effect")
-        if any(b["curse_id"] == negative_id for i, b in enumerate(self.drafts[editor]) if i != slot):
-            raise ValueError("Duplicate negative effect")
         self._compatible(self._others(editor,slot)+[pending["effect_id"],negative_id])
         self.drafts[editor][slot] = dict(effect_id=pending["effect_id"], curse_id=negative_id)
         self.pending = None
@@ -133,7 +139,7 @@ class RelicSelection:
                 raise ValueError("Invalid positive/negative binding")
         self._compatible([value for b in bundles for value in (b["effect_id"],b["curse_id"])])
         bundles.sort(key=lambda b: (self.entries[b["effect_id"]]["order"], b["effect_id"]))
-        return dict(kind=kind, bundles=bundles, price=1, currency_cost_type=4,
+        return dict(kind=kind, color=self.colors[editor], bundles=bundles, price=1, currency_cost_type=4,
                     editor=editor, session=self.session, version=self.version)
 
     def request(self, editor):

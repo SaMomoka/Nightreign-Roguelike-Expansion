@@ -14,9 +14,10 @@ from relic_launch import verify_package,sha,launch
 from full_relic_menu import compile_menu
 from native_menu import ASSETS,ARCHIVE_HASH
 from phase1_rewards import SOURCE
+from relic_filters import bind_filters, color_products, COLORS
 
 RUNTIME_TOOLS=("relic_runtime.py","relic_selection.py","full_relic_menu.py",
-               "probe_relic_params.py","probe_relic_work_values.py")
+               "probe_relic_params.py","probe_relic_work_values.py","relic_filters.py")
 
 
 def build(root=ROOT,shell=None):
@@ -26,22 +27,37 @@ def build(root=ROOT,shell=None):
     if old["kind"]!="relic_editor":raise ValueError("Expected verified static editor base")
     catalog=load(root/"local/evidence/relic-full-catalog.json")
     if catalog["source_sha256"]!=SOURCE:raise ValueError("Unsupported catalog")
+    native=load(root/'local/evidence/relic-filters.json')
+    bind_filters(catalog,native)
     # Keep the exact data used by the runtime in the hashed package. Large
     # source-reference lists remain in the ignored research evidence folder.
     compact=dict(schema_version=1,source_sha256=SOURCE,entries=[
         {k:v for k,v in e.items() if k not in ("native_links","references","reference_labels","info")}
         for e in catalog["entries"]])
+    aliases=[]
+    selectable=sorted((e for e in compact['entries'] if e['selectable_modes']),key=lambda e:e['effect_id'])
+    for index,e in enumerate(selectable):
+        e['duplicate_pools']=[e['deterministic_pool']]
+        for occurrence in (1,2):
+            alias_id=1800000000+index*2+occurrence-1
+            aliases.append(dict(source_effect=e['effect_id'],source_pool=e['deterministic_pool'],
+                effect_id=alias_id,pool_id=alias_id,occurrence=occurrence))
+            e['duplicate_pools'].append(alias_id)
     plan=compile_menu(compact)
+    plan['duplicate_aliases']=aliases
+
     by_id={e["effect_id"]:e for e in compact["entries"]}
     plan["initial_products"]=[]
-    for editor in range(4):
+    for product in color_products(native):
+        editor=product['editor']
         positives=(7000000,7000100,7000200) if editor<2 else (6001400,6003000,6003100)
         negatives=(None,None,None) if editor<2 else (6830000,None,None)
         fields={}
         for slot,(p,n) in enumerate(zip(positives,negatives),1):
             fields[f"attachEffectTableId_{slot}"]=by_id[p]["deterministic_pool"]
             fields[f"attachEffectTableId_curse{slot}"]=-1 if n is None else by_id[n]["deterministic_pool"]
-        plan["initial_products"].append(dict(id=9000000+editor,template_id=129 if editor<2 else 2000302,fields=fields))
+        product['fields']=fields
+        plan["initial_products"].append(product)
     folder=root/"local/packages"/("full_relic_"+datetime.now().strftime("%Y%m%d_%H%M%S")+"_"+uuid.uuid4().hex[:6])
     folder.mkdir(parents=True,exist_ok=False)
     for relative in ["mod/regulation.bin"]+["mod/"+p for p in ASSETS]:
@@ -63,11 +79,12 @@ def build(root=ROOT,shell=None):
         regulation_internal_version="10350000",game_verified=False,
         source_package=source.name,workbook_sha256=catalog["reference"]["sha256"],
         limitations=["Full runtime crafting and persistence require in-game verification.",
-                     "Headless adapter updates only four owned mod parameter rows and one owned work-value response.",
+                     "Headless adapter updates only eight owned color-specific mod parameter rows and one owned work-value response.",
+                     "Duplicate slots use custom effect IDs and require this package to remain loaded; preservation and stacking need game testing.",
                      "Requires this package and its local adapter; no multiplayer verification."])
     (folder/"manifest.json").write_text(json.dumps(manifest,ensure_ascii=False,indent=2),encoding="utf-8")
     files=["generate.me3","play.me3","manifest.json","full-menu-plan.json","runtime-catalog.json",
-           "runtime-layout.json","full-build-report.json","mod/regulation.bin"]+["mod/"+p for p in ASSETS]
+           "runtime-layout.json","full-build-report.json","mod/regulation.bin"]+["mod/"+p for p in ASSETS]+[f"mod/msg/{lang}/item_dlc01.msgbnd.dcx" for lang in ('zhocn','engus')]
     metadata=dict(schema_version=1,kind="full_relic_editor",savefile=save,
         sha256={name:sha(folder/name) for name in files},
         tool_hashes={name:sha(root/"tools"/name) for name in RUNTIME_TOOLS})

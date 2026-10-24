@@ -4,7 +4,7 @@ $root=(Resolve-Path -LiteralPath $ProjectRoot).Path
 $folder=(Resolve-Path -LiteralPath $Package).Path
 if(-not $folder.StartsWith((Join-Path $root 'local/packages')+[IO.Path]::DirectorySeparatorChar)){throw 'Package outside project'}
 $plan=Get-Content -LiteralPath (Join-Path $folder 'full-menu-plan.json') -Raw | ConvertFrom-Json
-if($plan.kind -ne 'full_relic_runtime_menu' -or $plan.state_first -ne 400000 -or $plan.state_end -gt 500000){throw 'Invalid full menu plan'}
+if($plan.schema_version -ne 2 -or $plan.kind -ne 'full_relic_runtime_menu' -or $plan.state_first -ne 400000 -or $plan.state_end -gt 500000){throw 'Invalid full menu plan'}
 $lib=Join-Path $root 'local/tools/Smithbox-2.2.6'
 [Environment]::CurrentDirectory=$lib
 Set-Location -LiteralPath $lib
@@ -30,6 +30,12 @@ public static class NreFull {
  public static int Get(PARAM.Row r,string field){
   foreach(var c in r.Cells)if(c.Def.InternalName==field)return Convert.ToInt32(c.Value);
   throw new Exception("Missing param field");
+ }
+ public static bool Same(PARAM.Row a,PARAM.Row b,string field){
+  object x=a.Cells.First(c=>c.Def.InternalName==field).Value;
+  object y=b.Cells.First(c=>c.Def.InternalName==field).Value;
+  if(x is byte[] && y is byte[])return ((byte[])x).SequenceEqual((byte[])y);
+  return object.Equals(x,y);
  }
  public static void Check(Dictionary<long,ESD.State> states, long first,long end, HashSet<long> waits){
   var done=new HashSet<long>();var stack=new HashSet<long>();
@@ -58,6 +64,33 @@ function Param($bundle,$name){
 $regPath=Join-Path $folder 'mod/regulation.bin'
 $reg=[SoulsFormats.SFUtil]::DecryptNightreignRegulation($regPath)
 if($reg.Version -ne '10350000'){throw 'Unexpected regulation version'}
+# Clone only custom aliases. Original effects and native gameplay fields stay unchanged.
+$effects=Param $reg 'AttachEffectParam';$pools=Param $reg 'AttachEffectTableParam'
+$effectMap=@{};foreach($r in $effects.table.Rows){$effectMap[[int]$r.ID]=$r}
+$poolMap=@{};foreach($r in $pools.table.Rows){if(-not $poolMap.ContainsKey([int]$r.ID)){$poolMap[[int]$r.ID]=@()};$poolMap[[int]$r.ID]+=$r}
+$aliasCount=0
+foreach($alias in $plan.duplicate_aliases){
+    if($alias.effect_id -lt 1800000000 -or $alias.effect_id -ge 1800010000 -or $alias.pool_id -ne $alias.effect_id){throw 'Unapproved alias allocation'}
+    if($effectMap.ContainsKey([int]$alias.effect_id) -or $poolMap.ContainsKey([int]$alias.pool_id)){throw 'Duplicate alias collision'}
+    $src=$effectMap[[int]$alias.source_effect]
+    $choices=@($poolMap[[int]$alias.source_pool] | Where-Object {([NreFull]::Get($_,'chanceWeight') -gt 0 -and [NreFull]::Get($_,'chanceWeight_dlc') -ne 0)})
+    if($null -eq $src -or $choices.Count -ne 1 -or [NreFull]::Get($choices[0],'attachEffectId') -ne $alias.source_effect){throw 'Unverified deterministic alias source'}
+    $copy=[SoulsFormats.PARAM+Row]::new($src);$copy.ID=[int]$alias.effect_id
+    # These are project-owned group IDs, not claims about unused native IDs.
+    [NreFull]::Set($copy,'compatibilityId',[int]$alias.effect_id)
+    [NreFull]::Set($copy,'exclusivityId',[int]$alias.effect_id)
+    foreach($cell in $src.Cells){
+        if($cell.Def.InternalName -notin @('compatibilityId','exclusivityId')){
+            if(-not [NreFull]::Same($copy,$src,$cell.Def.InternalName)){throw 'Alias changed gameplay or text field'}
+        }
+    }
+    $pool=[SoulsFormats.PARAM+Row]::new($choices[0]);$pool.ID=[int]$alias.pool_id
+    [NreFull]::Set($pool,'attachEffectId',[int]$alias.effect_id)
+    $effects.table.Rows.Add($copy);$pools.table.Rows.Add($pool)
+    $effectMap[[int]$copy.ID]=$copy;$poolMap[[int]$pool.ID]=@($pool);$aliasCount++
+}
+if($aliasCount -eq 0){throw 'Missing duplicate alias plan'}
+$effects.file.Bytes=$effects.table.Write();$pools.file.Bytes=$pools.table.Write()
 $ant=Param $reg 'EquipParamAntique'
 $rowMap=@{};foreach($r in $ant.table.Rows){$rowMap[[int]$r.ID]=$r}
 foreach($product in $plan.initial_products){
@@ -65,11 +98,20 @@ foreach($product in $plan.initial_products){
     $old=$rowMap[[int]$product.id]
     $template=$rowMap[[int]$product.template_id]
     if($null -eq $old -or $null -eq $template){throw 'Missing known row'}
+    if([NreFull]::Get($template,'relicColor') -ne $product.color -or [NreFull]::Get($template,'isDeepRelic') -ne [int]($product.editor -eq 2) -or [NreFull]::Get($template,'iconId') -ne $product.icon_id){throw 'Color template mismatch'}
     $new=[SoulsFormats.PARAM+Row]::new($template);$new.ID=[int]$product.id
     foreach($field in $product.fields.PSObject.Properties){[NreFull]::Set($new,$field.Name,[int]$field.Value)}
     $index=$ant.table.Rows.IndexOf($old);$ant.table.Rows[$index]=$new
 }
 $ant.file.Bytes=$ant.table.Write()
+$shop=Param $reg 'ShopLineupParam'
+foreach($product in $plan.initial_products){
+    $shopRow=@($shop.table.Rows | Where-Object ID -eq $product.shop_id)
+    if($shopRow.Count -ne 1){throw 'Missing color product shop row'}
+    foreach($pair in @{equipId=$product.id;value=1;costType=4;sellQuantity=-1;setNum=1;eventFlag_forStock=0;eventFlag_forRelease=0}.GetEnumerator()){
+        if([NreFull]::Get($shopRow[0],$pair.Key) -ne $pair.Value){throw 'Color shop mapping, cost or stock mismatch'}
+    }
+}
 $raw=[byte[]]$ant.file.Bytes.ToArray()
 $count=[BitConverter]::ToUInt16($raw,10)
 if($count -ne $ant.table.Rows.Count){throw 'Native header layout mismatch'}
@@ -86,10 +128,14 @@ for($i=0;$i -lt $count;$i++){
     }
     $layout+=@{id=$id;size=48;initial_hex=[Convert]::ToHexString([byte[]]$bytes);field_offsets=$offsets}
 }
-if($layout.Count -ne 4){throw 'Missing runtime row guards'}
+if($layout.Count -ne 8){throw 'Missing runtime row guards'}
 [SoulsFormats.SFUtil]::EncryptNightreignRegulation($regPath,$reg,$reg.Compression)
 $round=[SoulsFormats.SFUtil]::DecryptNightreignRegulation($regPath)
 $rAnt=Param $round 'EquipParamAntique'
+foreach($name in 'AttachEffectParam','AttachEffectTableParam'){
+    $rt=Param $round $name;$expected=if($name -eq 'AttachEffectParam'){$effects}else{$pools}
+    if((Hash $rt.file.Bytes.ToArray()) -ne (Hash $expected.file.Bytes.ToArray())){throw 'Alias table roundtrip failed'}
+}
 if((Hash $rAnt.file.Bytes.ToArray()) -ne (Hash $ant.file.Bytes.ToArray())){throw 'Regulation roundtrip failed'}
 $talkPath=Join-Path $folder 'mod/script/talk/m10_00_00_00.talkesdbnd.dcx'
 $b=[SoulsFormats.BND4]::Read($talkPath)
@@ -159,10 +205,30 @@ foreach($language in 'zhocn','engus'){
     $rt=($back.Files | Where-Object {$_.Name.EndsWith('\EventTextForTalk.fmg')}).Bytes
     if((Hash $rt.ToArray()) -ne (Hash $f.Bytes.ToArray())){throw 'Text roundtrip failed'}
 }
-[ordered]@{schema_version=1;rows=$layout;table='EquipParamAntique';native_row_size=48;
+$extraction=Get-Content (Join-Path $root 'local/native-menu/extraction.json') -Raw | ConvertFrom-Json
+foreach($language in 'zhocn','engus'){
+    $relative="msg/$language/item_dlc01.msgbnd.dcx"
+    $sourcePath=Join-Path $root "local/native-menu/original/$relative"
+    $sourceHash=(Get-FileHash -LiteralPath $sourcePath).Hash
+    if(@($extraction.files | Where-Object {$_.path -eq $relative -and $_.sha256 -eq $sourceHash}).Count -ne 1){throw 'Unverified item text source'}
+    $msg=[SoulsFormats.BND4]::Read($sourcePath)
+    $f=@($msg.Files | Where-Object {$_.Name.EndsWith('\AntiqueName.fmg')})[0]
+    $text=[SoulsFormats.FMG]::Read($f.Bytes)
+    $zhColors=@('红色','蓝色','黄色','绿色');$enColors=@('Red','Blue','Yellow','Green')
+    foreach($product in $plan.initial_products){
+        if(@($text.Entries | Where-Object ID -eq $product.id).Count){throw 'Custom item text collision'}
+        if($language -eq 'zhocn'){$name='自造'+$zhColors[$product.color]+$(if($product.editor -eq 2){'深夜遗物'}else{'遗物'})}
+        else{$name='Crafted '+$enColors[$product.color]+$(if($product.editor -eq 2){' Deep Relic'}else{' Relic'})}
+        $text.Entries.Add([SoulsFormats.FMG+Entry]::new($text,[int]$product.id,$name))
+    }
+    $f.Bytes=$text.Write();$target=Join-Path $folder "mod/$relative";$msg.Write($target)
+    $back=[SoulsFormats.BND4]::Read($target)
+    if((Hash ($back.Files | Where-Object {$_.Name.EndsWith('\AntiqueName.fmg')}).Bytes.ToArray()) -ne (Hash $f.Bytes.ToArray())){throw 'Item name roundtrip failed'}
+}
+[ordered]@{schema_version=2;rows=$layout;table='EquipParamAntique';native_row_size=48;
     paramdef_sha256=(Get-FileHash -LiteralPath (Join-Path $lib 'Assets/PARAM/NR/Defs/EquipParamAntique.xml')).Hash} |
     ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $folder 'runtime-layout.json') -Encoding utf8
 [ordered]@{status='BUILD_PASS_RUNTIME_TEST_PENDING';states=@($plan.states).Count;texts=@($plan.texts).Count;
-    native_row_guards=4;native_work_values=4;esd_restore_verified=$true;resource_roundtrips_verified=$true;
+    duplicate_aliases=$aliasCount;alias_fields_verified=$true;native_row_guards=8;visible_editors=2;colors=4;shop_mapping_and_price_verified=$true;native_filter_hierarchy=$true;native_work_values=4;esd_restore_verified=$true;resource_roundtrips_verified=$true;
     original_game_modified=$false;game_verified=$false} |
     ConvertTo-Json | Set-Content -LiteralPath (Join-Path $folder 'full-build-report.json') -Encoding utf8
